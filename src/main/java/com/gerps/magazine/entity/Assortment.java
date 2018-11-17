@@ -45,5 +45,4 @@ public class Assortment {
 
     @Enumerated
     private Vat vat;
-
 }
