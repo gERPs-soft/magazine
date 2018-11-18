@@ -2,9 +2,7 @@ package com.gerps.magazine.entity;
 
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 /**
  * Created by Grzesiek on 2018-11-17
@@ -12,10 +10,11 @@ import javax.persistence.Id;
 
 @Entity
 @NoArgsConstructor
+@Table(name = "suppliers")
 public class Supplier {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     private String name;
@@ -28,9 +27,9 @@ public class Supplier {
     private String email;
     private String www;
 
-    private String representativePerson;
-    private String bankSupplierName;
-    private Long bankSupplierAccountNumber;
+    private String representative_person;
+    private String bank_supplier_name;
+    private String bank_supplier_account_number;
 
 
 }

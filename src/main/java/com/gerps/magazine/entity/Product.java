@@ -11,7 +11,8 @@ import java.math.BigDecimal;
 
 @Entity
 @NoArgsConstructor
-public class Assortment {
+@Table(name = "products")
+public class Product {
 
     @Id
     @GeneratedValue
@@ -21,27 +22,27 @@ public class Assortment {
     private String name;
 
     @ManyToOne
-    private AssortmentGroup assortmentGroupId;
+    private ProductGroup product_group;
 
     private String PKWiU;
     private String unit;
     private String barcode;
-    private Double weightUnit;
+    private Double weight_unit;
 
     @ManyToOne
-    private PackageUnit packageUnitId;
+    private PackageUnit package_unit;
 
-    private Integer howManyInPackage;
+    private Integer number_in_package;
     private Integer height;
     private Integer weight;
     private Integer lenght;
-    private Integer howManyInPallet;
+    private Integer number_in_pallet;
 
     @ManyToOne
-    private Supplier supplierId;
+    private Supplier supplier;
 
-    private Long quantityInStock;
-    private BigDecimal priceLastSupply;
+    private Integer stock;
+    private BigDecimal price_last_supply;
 
     @Enumerated
     private Vat vat;

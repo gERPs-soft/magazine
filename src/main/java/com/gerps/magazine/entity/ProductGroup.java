@@ -5,6 +5,7 @@ import lombok.NoArgsConstructor;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.Table;
 
 /**
  * Created by Grzesiek on 2018-11-17
@@ -12,12 +13,11 @@ import javax.persistence.Id;
 
 @Entity
 @NoArgsConstructor
-public class AssortmentGroup {
+public class ProductGroup {
 
     @Id
     @GeneratedValue
-    private Long id;
+    private Integer id;
 
     private String name;
-
 }
