@@ -20,7 +20,7 @@ public class ProductDtoConverter implements Function<Product, ProductDto> {
     @Override
     public ProductDto apply(Product product) {
 
-        logger.info("ProductDtoConverter()");
+        //logger.info("ProductDtoConverter()");
 
         return new ProductDto(product.getId(), product.getAssort_index(), product.getName(), product.getProduct_group().getId(),
                 product.getPKWiU(), product.getUnit(), product.getBarcode(), product.getWeight_unit(), product.getPackage_unit().getId(),

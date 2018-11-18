@@ -53,10 +53,10 @@ public class ProductsServiceImpl implements ProductsService {
     public ProductDto findProductById(Long id)  throws EntityNotFoundException {
         logger.info("findProduct by id:{}", id);
 
-        Optional<Product> product = productsRepository.findById(id);
+        Optional<Product> optionalProduct = productsRepository.findById(id);
 
-        if (product.isPresent()) {
-            Product productIsPresent = product.get();
+        if (optionalProduct.isPresent()) {
+            Product productIsPresent = optionalProduct.get();
             logger.info("Found product {}", productIsPresent.getName());
             return productDtoConverter.apply(productIsPresent);
         } else {
