@@ -1,6 +1,7 @@
 package com.gerps.magazine.entity;
 
 import com.fasterxml.jackson.annotation.JacksonInject;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
@@ -12,6 +13,7 @@ import java.math.BigDecimal;
 
 @Entity
 @NoArgsConstructor
+@Data
 @Table(name = "products")
 public class Product {
 
@@ -38,7 +40,7 @@ public class Product {
     private Integer number_in_package;
     private Integer height;
     private Integer weight;
-    private Integer lenght;
+    private Integer length;
     private Integer number_in_pallet;
 
     @ManyToOne
@@ -48,7 +50,9 @@ public class Product {
     private Integer stock;
     private BigDecimal price_last_supply;
 
-    @Enumerated
+    @Enumerated(EnumType.STRING)
     private Vat vat;
+
+
 
 }

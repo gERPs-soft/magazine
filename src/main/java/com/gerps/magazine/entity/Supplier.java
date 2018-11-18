@@ -1,5 +1,6 @@
 package com.gerps.magazine.entity;
 
+import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
@@ -10,6 +11,7 @@ import javax.persistence.*;
 
 @Entity
 @NoArgsConstructor
+@Data
 @Table(name = "suppliers")
 public class Supplier {
 

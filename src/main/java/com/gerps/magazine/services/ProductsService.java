@@ -1,5 +1,6 @@
 package com.gerps.magazine.services;
 
+import com.gerps.magazine.dto.ProductDto;
 import com.gerps.magazine.entity.Product;
 
 import java.util.List;
@@ -11,9 +12,9 @@ import java.util.Optional;
 
 public interface ProductsService {
 
-    List<Product> findAllProducts();
+    List<ProductDto> findAllProducts();
 
-    Optional<Product> findProductById(Long id);
+    ProductDto findProductById(Long id);
 
     void save(Product product);
 
