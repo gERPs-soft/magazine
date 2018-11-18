@@ -3,6 +3,7 @@ package com.gerps.magazine.services.impl;
 import com.gerps.magazine.converters.ProductDtoConverter;
 import com.gerps.magazine.dto.ProductDto;
 import com.gerps.magazine.entity.Product;
+import com.gerps.magazine.exceptions.EntityNotFoundException;
 import com.gerps.magazine.repository.ProductsRepository;
 import com.gerps.magazine.services.ProductsService;
 import org.slf4j.Logger;
@@ -11,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -35,18 +35,22 @@ public class ProductsServiceImpl implements ProductsService {
     }
 
     @Override
-    public List<ProductDto> findAllProducts() {
+    public List<ProductDto> findAllProducts() throws EntityNotFoundException {
         logger.info("find all products()");
 
         Iterable<Product> productList = productsRepository.findAll();
-
-        return StreamSupport.stream(productList.spliterator(), true)
-                .map(productDtoConverter)
-                .collect(Collectors.toList());
+        if (productList != null) {
+            List<ProductDto> productDtoList = new ArrayList<>();
+            productList.forEach(product -> productDtoList.add(productDtoConverter.apply(product)));
+            return productDtoList;
+        } else {
+            logger.error("Products list is empty. Not found any products");
+            throw new EntityNotFoundException("Products list is empty. No products found in the database. Please try again later.");
+        }
     }
 
     @Override
-    public ProductDto findProductById(Long id) {
+    public ProductDto findProductById(Long id)  throws EntityNotFoundException {
         logger.info("findProduct by id:{}", id);
 
         Optional<Product> product = productsRepository.findById(id);
@@ -56,8 +60,8 @@ public class ProductsServiceImpl implements ProductsService {
             logger.info("Found product {}", productIsPresent.getName());
             return productDtoConverter.apply(productIsPresent);
         } else {
-            logger.error("Not found product by id:{}", id);
-            return new ProductDto();
+            logger.error("Not found product by id: {}", id);
+            throw  new EntityNotFoundException("Product with id "+id+" was not found in database. Please try again with another id.");
         }
     }
 
