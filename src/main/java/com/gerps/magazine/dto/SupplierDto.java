@@ -1,26 +1,19 @@
-package com.gerps.magazine.entity;
+package com.gerps.magazine.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.*;
-
 /**
- * Created by Grzesiek on 2018-11-17
+ * Created by Grzesiek on 2018-11-18
  */
-
-@Entity
-@NoArgsConstructor
 @Data
-@Table(name = "suppliers")
-public class Supplier {
+@AllArgsConstructor
+@NoArgsConstructor
+public class SupplierDto {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-
     private String name;
-
     private String city;
     private String street;
     private String street_number;
@@ -32,6 +25,5 @@ public class Supplier {
     private String representative_person;
     private String bank_supplier_name;
     private String bank_supplier_account_number;
-
 
 }
