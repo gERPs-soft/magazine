@@ -1,5 +1,6 @@
 package com.gerps.magazine.entity;
 
+import com.fasterxml.jackson.annotation.JacksonInject;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
@@ -22,6 +23,7 @@ public class Product {
     private String name;
 
     @ManyToOne
+    @JoinColumn(name = "product_group_id")
     private ProductGroup product_group;
 
     private String PKWiU;
@@ -30,6 +32,7 @@ public class Product {
     private Double weight_unit;
 
     @ManyToOne
+    @JoinColumn(name = "package_unit_id")
     private PackageUnit package_unit;
 
     private Integer number_in_package;
@@ -39,6 +42,7 @@ public class Product {
     private Integer number_in_pallet;
 
     @ManyToOne
+    @JoinColumn(name = "supplier_id")
     private Supplier supplier;
 
     private Integer stock;
