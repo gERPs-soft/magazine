@@ -32,7 +32,7 @@ public class Product {
 
     @Enumerated(EnumType.STRING)
     private UnitOfMasure unitOfMasure;
-    
+
     private String barcode;
     private Double weight_unit;
 
