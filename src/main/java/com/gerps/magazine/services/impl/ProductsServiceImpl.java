@@ -45,7 +45,7 @@ public class ProductsServiceImpl implements ProductsService {
             return productDtoList;
         } else {
             logger.error("Products list is empty. Not found any products");
-            throw new EntityNotFoundException("Products list is empty. No products found in the database. Please try again later.");
+            throw new EntityNotFoundException("Products list is empty. No products found in database. Please try again later.");
         }
     }
 

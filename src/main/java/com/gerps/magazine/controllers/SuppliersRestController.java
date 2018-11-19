@@ -45,13 +45,5 @@ public class SuppliersRestController {
         return supplierService.findSupplierById(id);
     }
 
-    /*@RequestMapping("/example")
-    @ResponseBody
-    public String getExample(HttpServletRequest request) {
-        String ipadress = request.getRemoteAddr();
-        String browser = request.getHeader("User-Agent");
-        String uri = request.getRequestURI();
 
-        return "Your ip:" + ipadress + System.lineSeparator() + "Your browser: " + browser + System.lineSeparator() + "Uri: " + uri;
-    }*/
 }
