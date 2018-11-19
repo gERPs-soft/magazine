@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -33,7 +34,18 @@ public class SupplierServiceImpl implements SupplierService {
 
     @Override
     public List<SupplierDto> findAllSuppliers() throws EntityNotFoundException {
-        return null;
+        logger.info("findAllSuppliers()");
+
+        Iterable<Supplier> supplierIterable = suppliersRepository.findAll();
+
+        if(supplierIterable!=null){
+            List<SupplierDto> supplierDtoList = new ArrayList<>();
+            supplierIterable.forEach(supplier -> supplierDtoList.add(supplierDtoConverter.apply(supplier)));
+            return supplierDtoList;
+        }else {
+            logger.error("Suppliers list is empty. Not found any suppliers");
+            throw new EntityNotFoundException("Suppliers list is empty. No suppliers found in database. Please try again later.");
+        }
     }
 
     @Override

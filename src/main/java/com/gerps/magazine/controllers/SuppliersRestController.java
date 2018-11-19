@@ -6,17 +6,19 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
  * Created by Grzesiek on 2018-11-18
  */
 
-@Controller
-@RequestMapping("magazin")
+@RestController
+@RequestMapping("magazin/suppliers")
 public class SuppliersRestController {
 
     private static final Logger logger = LoggerFactory.getLogger(SuppliersRestController.class);
@@ -27,17 +29,21 @@ public class SuppliersRestController {
         this.supplierService = supplierService;
     }
 
-    @GetMapping("/suppliers/all")
+    @GetMapping("/all")
     @CrossOrigin(origins = "http://localhost:4200")
     public List<SupplierDto> findAllSuppliers() {
         logger.info("Rest findAllSuppliers()");
         return supplierService.findAllSuppliers();
     }
 
-    @GetMapping("/suppliers/{id}")
+    @GetMapping("/{id}")
     @CrossOrigin(origins = "http://localhost:4200")
+    @ResponseBody
     public SupplierDto findSupplierById(@PathVariable Long id) {
         logger.info("findSupplierById={}", id);
+
         return supplierService.findSupplierById(id);
     }
+
+
 }

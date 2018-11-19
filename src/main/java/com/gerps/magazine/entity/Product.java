@@ -29,7 +29,10 @@ public class Product {
     private ProductGroup product_group;
 
     private String PKWiU;
-    private String unit;
+
+    @Enumerated(EnumType.STRING)
+    private UnitOfMasure unitOfMasure;
+
     private String barcode;
     private Double weight_unit;
 
