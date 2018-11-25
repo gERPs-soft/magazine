@@ -1,5 +1,6 @@
 package com.gerps.magazine.services.impl;
 
+import com.gerps.magazine.converters.ProductConverter;
 import com.gerps.magazine.converters.ProductDtoConverter;
 import com.gerps.magazine.dto.ProductDto;
 import com.gerps.magazine.entity.Product;
@@ -27,11 +28,13 @@ public class ProductsServiceImpl implements ProductsService {
     private static final Logger logger = LoggerFactory.getLogger(ProductsServiceImpl.class);
     private ProductsRepository productsRepository;
     private ProductDtoConverter productDtoConverter;
+    private ProductConverter productConverter;
 
     @Autowired
-    public ProductsServiceImpl(ProductsRepository productsRepository, ProductDtoConverter productDtoConverter) {
+    public ProductsServiceImpl(ProductsRepository productsRepository, ProductDtoConverter productDtoConverter, ProductConverter productConverter) {
         this.productsRepository = productsRepository;
         this.productDtoConverter = productDtoConverter;
+        this.productConverter = productConverter;
     }
 
     @Override
@@ -39,6 +42,7 @@ public class ProductsServiceImpl implements ProductsService {
         logger.info("find all products()");
 
         Iterable<Product> productList = productsRepository.findAll();
+
         if (productList != null) {
             List<ProductDto> productDtoList = new ArrayList<>();
             productList.forEach(product -> productDtoList.add(productDtoConverter.apply(product)));
@@ -67,7 +71,8 @@ public class ProductsServiceImpl implements ProductsService {
 
     @Override
     public void save(Product product) {
-
+        logger.info("Save to db product with name={}", product.getName());
+        productsRepository.save(product);
     }
 
     @Override

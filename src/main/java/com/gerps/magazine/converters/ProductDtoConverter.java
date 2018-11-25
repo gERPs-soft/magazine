@@ -15,16 +15,14 @@ import java.util.function.Function;
 @Component
 public class ProductDtoConverter implements Function<Product, ProductDto> {
 
-    private final static Logger logger = LoggerFactory.getLogger(ProductDtoConverter.class);
-
     @Override
     public ProductDto apply(Product product) {
 
-        //logger.info("ProductDtoConverter()");
-
         return new ProductDto(product.getId(), product.getAssort_index(), product.getName(), product.getProduct_group().getId(),
-                product.getPKWiU(), product.getUnitOfMasure().name(), product.getBarcode(), product.getWeight_unit(), product.getPackage_unit().getId(),
-                product.getNumber_in_package(), product.getHeight(), product.getWeight(), product.getLength(), product.getSupplier().getId(), product.getStock(),
-                product.getVat().getVatValue());
+                product.getUnitOfMasure().name(), product.getBarcode(), product.getWeight_unit(),
+                product.getPackageUnit().name(), product.getNumber_in_package(),
+                product.getHeight(), product.getWeight(), product.getLength(),
+                product.getSupplier().getId(), product.getStock(),
+                product.getVat().name());
     }
 }

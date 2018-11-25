@@ -9,9 +9,10 @@ import com.gerps.magazine.services.ProductsService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.Date;
 import java.util.List;
@@ -21,29 +22,28 @@ import java.util.List;
  */
 
 @RestController
-@RequestMapping("magazin")
+@RequestMapping(value = "/magazine")
+@CrossOrigin(origins = "http://localhost:4200")
 public class ProductsRestController {
 
     private static final Logger logger = LoggerFactory.getLogger(ProductsRestController.class);
-    private ProductsService productsService;
 
-    @Autowired
+    private ProductsService productsService;
     private ProductConverter productConverter;
 
     @Autowired
-    public ProductsRestController(ProductsService productsService) {
+    public ProductsRestController(ProductsService productsService, ProductConverter productConverter) {
         this.productsService = productsService;
+        this.productConverter = productConverter;
     }
 
     @GetMapping("/products/all")
-    @CrossOrigin(origins = "http://localhost:4200")
     public List<ProductDto> findAllProducts() {
         logger.info("Rest findAllProducts()");
         return productsService.findAllProducts();
     }
 
     @GetMapping("/products/{id}")
-    @CrossOrigin(origins = "http://localhost:4200")
     public ResponseEntity<ProductDto> findProductById(@PathVariable Long id) {
         logger.info("Rest findProductById={}", id);
 
@@ -51,31 +51,73 @@ public class ProductsRestController {
         return new ResponseEntity<>(productDto, HttpStatus.OK);
     }
 
-    @PostMapping("/products/add")
-    @CrossOrigin(origins = "http://localhost:4200")
-    public ResponseEntity<Object> addProduct(@RequestBody ProductDto productDto) {
-        logger.info("add to db new product {}", productDto.getName());
+    @RequestMapping(value = "/products/add/new", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    private ResponseEntity addProduct(@RequestBody ProductDto productDto) {
+        logger.info("Try add new product {}", productDto.getName());
 
         if (productDto != null) {
+            logger.info("productDto is not empty, save new product {}", productDto.getName());
             Product product = productConverter.apply(productDto);
             productsService.save(product);
 
             ResponseDetails details = new ResponseDetails(new Date(), "Product " + productDto.getName() + " add to db.");
-            return new ResponseEntity(product, HttpStatus.CREATED);
+            return new ResponseEntity(details, HttpStatus.CREATED);
         } else {
             logger.error("Body is empty");
-            ResponseDetails details = new ResponseDetails(new Date(), "POST is empty");
+            ResponseDetails details = new ResponseDetails(new Date(), "Body is empty");
             return new ResponseEntity(details, HttpStatus.BAD_REQUEST);
         }
 
     }
 
     //do aktualizowania poszczegolnych pol productu
-    @PatchMapping("/products/{id}")
+    /*@PatchMapping("/products/{id}")
     @CrossOrigin(origins = "http://localhost:4200")
     public void editProductById(@PathVariable Long id) {
 
+    }*/
+
+    //metodka testowa wysylajaca POSTem JSONA z nowy produktem
+
+    //@CrossOrigin(origins = "http://localhost:8080")
+    @GetMapping("/addNewExamplesProduct")
+    @CrossOrigin(origins = "http://localhost:8080")
+    public void addNewExampleProduct() {
+        logger.info("addNewExampleProduct()");
+
+        String jsonToSent = "{" +
+                "    \"assort_index\": \"1.07.002\",\n" +
+                "    \"name\": \"Papier STANDARD 19 Flesz 1w szary\",\n" +
+                "    \"product_group\": 1,\n" +
+                "    \"unitOfMasure\": \"szt\",\n" +
+                "    \"barcode\": \"112200444413\",\n" +
+                "    \"weight_unit\": 4,\n" +
+                "    \"package_unit\": 2,\n" +
+                "    \"number_in_package\": 12,\n" +
+                "    \"height\": 20,\n" +
+                "    \"weight\": 40,\n" +
+                "    \"length\": 60,\n" +
+                "    \"supplier\": 2,\n" +
+                "    \"stock\": 1440,\n" +
+                "    \"vat\": \"VAT_23\",\n" +
+                "    \"pkwiU\": \"\",\n" +
+                "    \"id\": 3\n" +
+                "}";
+
+        HttpHeaders httpHeaders = new HttpHeaders();
+        //httpHeaders.add(HttpHeaders.CONTENT_TYPE, "application/json");
+        httpHeaders.setContentType(MediaType.APPLICATION_JSON);
+
+        HttpEntity httpEntity = new HttpEntity(jsonToSent, httpHeaders);
+        //HttpEntity httpEntity1 = new HttpEntity(jsonToSent)
+
+        RestTemplate restTemplate = new RestTemplate();
+
+        ResponseEntity<String> exchange = restTemplate.exchange(
+                "http://localhost:8080/magazine/products/add",
+                HttpMethod.POST,
+                httpEntity,
+                String.class);
     }
-
-
 }

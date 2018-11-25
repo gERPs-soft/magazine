@@ -1,6 +1,7 @@
 package com.gerps.magazine.entity;
 
 import com.fasterxml.jackson.annotation.JacksonInject;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -13,12 +14,13 @@ import java.math.BigDecimal;
 
 @Entity
 @NoArgsConstructor
+@AllArgsConstructor
 @Data
 @Table(name = "products")
 public class Product {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String assort_index;
@@ -28,17 +30,14 @@ public class Product {
     @JoinColumn(name = "product_group_id")
     private ProductGroup product_group;
 
-    private String PKWiU;
-
     @Enumerated(EnumType.STRING)
     private UnitOfMasure unitOfMasure;
 
     private String barcode;
     private Double weight_unit;
 
-    @ManyToOne
-    @JoinColumn(name = "package_unit_id")
-    private PackageUnit package_unit;
+    @Enumerated(EnumType.STRING)
+    private PackageUnit packageUnit;
 
     private Integer number_in_package;
     private Integer height;
@@ -56,6 +55,27 @@ public class Product {
     @Enumerated(EnumType.STRING)
     private Vat vat;
 
+    /*//created only to tests
+    public Product(String name) {
+        this.name = name;
+    }*/
 
-
+    public Product(String assort_index, String name, ProductGroup product_group, UnitOfMasure unitOfMasure, String barcode, Double weight_unit, PackageUnit packageUnit, Integer number_in_package, Integer height, Integer weight, Integer length, Integer number_in_pallet, Supplier supplier, Integer stock, BigDecimal price_last_supply, Vat vat) {
+        this.assort_index = assort_index;
+        this.name = name;
+        this.product_group = product_group;
+        this.unitOfMasure = unitOfMasure;
+        this.barcode = barcode;
+        this.weight_unit = weight_unit;
+        this.packageUnit = packageUnit;
+        this.number_in_package = number_in_package;
+        this.height = height;
+        this.weight = weight;
+        this.length = length;
+        this.number_in_pallet = number_in_pallet;
+        this.supplier = supplier;
+        this.stock = stock;
+        this.price_last_supply = price_last_supply;
+        this.vat = vat;
+    }
 }
