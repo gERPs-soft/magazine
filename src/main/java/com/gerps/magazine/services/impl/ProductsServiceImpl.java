@@ -55,7 +55,6 @@ public class ProductsServiceImpl implements ProductsService {
 
     @Override
     public ProductDto findProductById(Long id)  throws EntityNotFoundException {
-        logger.info("findProduct by id:{}", id);
 
         Optional<Product> optionalProduct = productsRepository.findById(id);
 

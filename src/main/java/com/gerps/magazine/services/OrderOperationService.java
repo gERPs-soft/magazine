@@ -1,5 +1,6 @@
 package com.gerps.magazine.services;
 
+import com.gerps.magazine.dto.OrderItemDto;
 import com.gerps.magazine.entity.OrderOperation;
 
 import java.util.List;
@@ -11,4 +12,5 @@ import java.util.List;
 public interface OrderOperationService {
 
     void saveOperation(List<OrderOperation> operations);
+    boolean checkOrderItemInStock(List<OrderItemDto> orderItems);
 }

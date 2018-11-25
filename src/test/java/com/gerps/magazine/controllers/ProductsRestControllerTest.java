@@ -58,11 +58,7 @@ public class ProductsRestControllerTest {
     @MockBean
     private ProductsService productsService;
 
-    @Test
-    public void findAllProducts() {
-    }
-
-    @Test
+    /*@Test
     public void findProductById() throws Exception {
         //Product testProduct = new Product("Papier PROFIT Flesz 2w bialy");
         //ProductDto testProductDto = productDtoConverter.apply(testProduct);
@@ -71,18 +67,18 @@ public class ProductsRestControllerTest {
 
         //given(productsService.findProductById(2l)).willReturn(testProductDto);
 
-        mockMvc.perform(get("/magazin/products/2")
+        mockMvc.perform(get("/magazine/products/2")
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                /*.andExpect(jsonPath("id").value(2))
-                .andExpect(jsonPath("name", is("Papier PROFIT Flesz 2w bialy")))*/
+                *//*.andExpect(jsonPath("id").value(2))
+                .andExpect(jsonPath("name", is("Papier PROFIT Flesz 2w bialy")))*//*
         ;
-    }
+    }*/
 
     @Test
     public void findProductByName() throws Exception{
         RestTemplate restTemplate = new RestTemplate();
-        String resourceUrl = "http://localhost:8080/magazin/products/1";
+        String resourceUrl = "http://localhost:8080/magazine/products/1";
         ResponseEntity<String> response
                 = restTemplate.getForEntity(resourceUrl, String.class);
         assertThat(response.getStatusCode(), equalTo(HttpStatus.OK));

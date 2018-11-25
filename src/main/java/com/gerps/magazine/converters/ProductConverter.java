@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
+import java.util.Optional;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Function;
 
 /**
@@ -21,20 +23,27 @@ import java.util.function.Function;
 public class ProductConverter implements Function<ProductDto, Product> {
 
     private final static Logger logger = LoggerFactory.getLogger(ProductConverter.class);
+    //private final AtomicLong counter = new AtomicLong();
+
+    private ProductsGroupService productsGroupService;
+    private SuppliersRepository suppliersRepository;
 
     @Autowired
-    private ProductsGroupService productsGroupService;
-    @Autowired
-    private SuppliersRepository suppliersRepository;
+    public ProductConverter(ProductsGroupService productsGroupService, SuppliersRepository suppliersRepository) {
+        this.productsGroupService = productsGroupService;
+        this.suppliersRepository = suppliersRepository;
+    }
 
     @Override
     public Product apply(ProductDto productDto) {
         logger.info("ProductConverter.apply()");
 
         ProductGroup productsGroup = productsGroupService.findProductsGroupById(productDto.getProduct_group());
-        Supplier supplierObject = suppliersRepository.findById(productDto.getSupplier()).get();
+        Optional<Supplier> optionalSupplier = suppliersRepository.findById(productDto.getSupplier());
+        Supplier supplierObject = optionalSupplier.get();
 
         Product product = new Product();
+        //product.setId(counter.incrementAndGet());
         product.setAssort_index(productDto.getAssort_index());
         product.setName(productDto.getName());
         product.setProduct_group(productsGroup);

@@ -21,6 +21,7 @@ public class OrderOperation {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private Long orderNumber;
     private LocalDateTime localDateTime;
     private Long productId;
     private Integer quantity;

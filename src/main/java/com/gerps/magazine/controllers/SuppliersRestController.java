@@ -19,6 +19,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("magazin/suppliers")
+@CrossOrigin(origins = "http://localhost:4200")
 public class SuppliersRestController {
 
     private static final Logger logger = LoggerFactory.getLogger(SuppliersRestController.class);
@@ -30,20 +31,19 @@ public class SuppliersRestController {
     }
 
     @GetMapping("/all")
-    @CrossOrigin(origins = "http://localhost:4200")
     public List<SupplierDto> findAllSuppliers() {
         logger.info("Rest findAllSuppliers()");
+
         return supplierService.findAllSuppliers();
     }
 
     @GetMapping("/{id}")
-    @CrossOrigin(origins = "http://localhost:4200")
-    @ResponseBody
     public SupplierDto findSupplierById(@PathVariable Long id) {
         logger.info("findSupplierById={}", id);
 
         return supplierService.findSupplierById(id);
     }
 
+    //@todo dorobić save i delete dostawców
 
 }

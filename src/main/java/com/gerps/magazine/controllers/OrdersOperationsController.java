@@ -5,20 +5,20 @@ import com.gerps.magazine.dto.OrderDto;
 import com.gerps.magazine.dto.OrderItemDto;
 import com.gerps.magazine.entity.OrderOperation;
 import com.gerps.magazine.entity.OrderStatus;
+import com.gerps.magazine.exceptions.ResponseDetails;
 import com.gerps.magazine.services.OrderOperationService;
 import com.gerps.magazine.services.ProductsService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -27,6 +27,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("magazine/orders")
+@CrossOrigin(origins = "http://localhost:4200")
 public class OrdersOperationsController {
 
     private static final Logger logger = LoggerFactory.getLogger(OrdersOperationsController.class);
@@ -40,9 +41,9 @@ public class OrdersOperationsController {
     }
 
     @PostMapping("/add-order")
-    @CrossOrigin(origins = "http://localhost:4200")
-    private void addNewOrder(@RequestBody OrderDto orderDto) {
+    private ResponseEntity addNewOrder(@RequestBody OrderDto orderDto) {
 
+        Long orderNumber = orderDto.getId();
         Long sellerId = orderDto.getSellerId();
         Long customerId = orderDto.getCustomerId();
         List<OrderItemDto> orderItems = orderDto.getItems();
@@ -50,8 +51,9 @@ public class OrdersOperationsController {
         logger.info("Add new order={} for customer {} with {} items.", orderDto.getId(), customerId, orderItems.size());
         List<OrderOperation> operationList = new ArrayList<>();
 
-        orderItems.stream().forEach(orderItemDto -> {
+        orderItems.forEach(orderItemDto -> {
             OrderOperation operation = new OrderOperation();
+            operation.setOrderNumber(orderNumber);
             operation.setLocalDateTime(LocalDateTime.now());
             operation.setProductId(orderItemDto.getProductId());
             operation.setQuantity(orderItemDto.getQuantity());
@@ -64,22 +66,18 @@ public class OrdersOperationsController {
 
         orderOperationService.saveOperation(operationList);
 
-    }
+        if (orderOperationService.checkOrderItemInStock(orderItems)) {
+            logger.info("All products in stock");
 
-    //metodka testowa wysylajaca POSTem JSONA z zamowienie
-    private static void addNewExampleOrder() {
-        RestTemplate restTemplate = new RestTemplate();
-        String jsonToSent = "{\"name\":\"mouse\",\"price\":5}";
+            String deliveryMessage = "All items from order "+orderNumber+" are in stock.\nDelivery time "+ LocalDate.now().plusDays(2);
+            ResponseDetails details = new ResponseDetails(new Date(), deliveryMessage);
+            return new ResponseEntity(details, HttpStatus.CREATED);
+        } else {
+            logger.error("Stock is to low");
 
-        HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.add(HttpHeaders.CONTENT_TYPE, "application/json");
-
-        HttpEntity httpEntity = new HttpEntity(jsonToSent, httpHeaders);
-
-        ResponseEntity exchange = restTemplate.exchange(
-                "http://localhost:8080/addProduct",
-                HttpMethod.POST,
-                httpEntity,
-                Void.class);
+            String deliveryMessage = "Not all products are in stock.\nDelivery time "+LocalDate.now().plusDays(4);
+            ResponseDetails details = new ResponseDetails(new Date(), deliveryMessage);
+            return new ResponseEntity(details, HttpStatus.CREATED);
+        }
     }
 }
