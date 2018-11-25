@@ -29,12 +29,11 @@ public class ProductDto {
 
     private Integer product_group;
 
-    private String PKWiU;
-    private String unit;
+    private String unitOfMasure;
     private String barcode;
     private Double weight_unit;
 
-    private Integer package_unit;
+    private String package_unit;
 
     private Integer number_in_package;
     private Integer height;
@@ -45,6 +44,6 @@ public class ProductDto {
 
     private Integer stock;
     //private BigDecimal price_last_supply;
-    private int vat;
+    private String vat;
 
 }
