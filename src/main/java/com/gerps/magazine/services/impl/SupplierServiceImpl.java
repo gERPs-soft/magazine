@@ -54,10 +54,9 @@ public class SupplierServiceImpl implements SupplierService {
         Optional<Supplier> optionalSupplier = suppliersRepository.findById(id);
 
         if (optionalSupplier.isPresent()) {
-            SupplierDto supplierDto = supplierDtoConverter.apply(optionalSupplier.get());
-            return supplierDto;
+            return supplierDtoConverter.apply(optionalSupplier.get());
         } else {
-            throw new EntityNotFoundException("Supplier with id="+id+" was not found in database. Please try again with another id");
+            throw new EntityNotFoundException("Supplier with orderId="+id+" was not found in database. Please try again with another orderId");
         }
     }
 

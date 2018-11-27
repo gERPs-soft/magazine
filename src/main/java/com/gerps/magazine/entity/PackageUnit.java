@@ -14,16 +14,10 @@ import javax.persistence.Id;
 
 public enum PackageUnit {
 
-    /*@Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
-
-    private String name;*/
-
     Karton,
     Folia,
     Baniak,
     Paleta,
-    Box;
+    Box
 
 }

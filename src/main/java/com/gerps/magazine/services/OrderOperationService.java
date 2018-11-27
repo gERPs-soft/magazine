@@ -11,9 +11,12 @@ import java.util.List;
  */
 
 public interface OrderOperationService {
+
+    List<OrderOperation> findAllOperationsByOrderId(Long orderId);
+
     void saveOperation(List<OrderOperation> operations);
 
-    boolean checkOrderItemInStock(List<OrderOperation> orderItems);
+    boolean checkOrderItemsInStock(List<OrderOperation> orderItems);
 
     OrderStatusDetails confirmOrder(List<OrderOperation> orderItems);
 }

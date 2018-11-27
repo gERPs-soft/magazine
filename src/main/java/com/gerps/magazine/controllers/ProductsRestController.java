@@ -59,6 +59,8 @@ public class ProductsRestController {
     private ResponseEntity addProduct(@RequestBody ProductDto productDto) {
         logger.info("Try add new product {}", productDto.getName());
 
+        ResponseEntity responseEntity;
+
         if (productDto != null) {
             logger.info("productDto is not empty, save new product {}", productDto.getName());
             Product product = productConverter.apply(productDto);
@@ -76,8 +78,8 @@ public class ProductsRestController {
 
 
     //@todo implements controller to edit products
-    /*@PostMapping("/products/{id}")
-    public void editProductById(@PathVariable Long id) {
+    /*@PostMapping("/products/{orderId}")
+    public void editProductById(@PathVariable Long orderId) {
 
     }*/
 
@@ -120,7 +122,7 @@ public class ProductsRestController {
                 "    \"stock\": 1440,\n" +
                 "    \"price\": 1.40,\n" +
                 "    \"vat\": \"VAT_23\",\n" +
-                "    \"id\": null" +
+                "    \"orderId\": null" +
                 "}";
 
         HttpHeaders httpHeaders = new HttpHeaders();

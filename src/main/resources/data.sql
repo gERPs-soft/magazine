@@ -6,7 +6,7 @@ INSERT INTO product_group(id, name) VALUES
 (5, 'Podajniki papieru'),
 (6, 'Podajniki ręczników');
 
-/*INSERT INTO package_unit(id, name) VALUES
+/*INSERT INTO package_unit(orderId, name) VALUES
 (1, 'Karton'),
 (2, 'Folia'),
 (3, 'Paleta'),

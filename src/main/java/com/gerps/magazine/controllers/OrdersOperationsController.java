@@ -36,15 +36,16 @@ public class OrdersOperationsController {
         this.orderOperationService = orderOperationService;
     }
 
-    @PostMapping("/add-order")
+    @PostMapping(value = "/add-order"/*, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE*/)
     private ResponseEntity addNewOrder(@RequestBody OrderDto orderDto) {
 
-        Long orderNumber = orderDto.getId();
+        Long orderNumber = orderDto.getOrderId();
         Long sellerId = orderDto.getSellerId();
         Long customerId = orderDto.getCustomerId();
         List<OrderItemDto> orderItems = orderDto.getItems();
 
-        logger.info("Add new order={} for customer {} with {} items.", orderDto.getId(), customerId, orderItems.size());
+        logger.info("Add new order from customer {} with {} items.", customerId, orderItems.size());
+        
         List<OrderOperation> operationList = new ArrayList<>();
 
         orderItems.forEach(orderItemDto -> {
@@ -56,6 +57,7 @@ public class OrdersOperationsController {
             operation.setSellerId(sellerId);
             operation.setCustomerId(customerId);
             operation.setProductPrice(orderItemDto.getProductPrice());
+            operation.setShippingOrderDate(LocalDateTime.now());
             operation.setOrderStatus(OrderStatus.CONFIRMED);
             operationList.add(operation);
         });
@@ -65,7 +67,5 @@ public class OrdersOperationsController {
         OrderStatusDetails orderStatusDetails = orderOperationService.confirmOrder(operationList);
 
         return new ResponseEntity(orderStatusDetails, HttpStatus.CREATED);
-
-
     }
 }

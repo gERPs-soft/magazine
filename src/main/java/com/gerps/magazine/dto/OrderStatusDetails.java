@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class OrderStatusDetails {
     private Long orderId;
-    private LocalDateTime localDateTime;
-    private String message;
+    private LocalDateTime deliveryTime;
+    private String additionalMessage;
     private OrderStatus orderStatus;
 }

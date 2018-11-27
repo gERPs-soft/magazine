@@ -6,6 +6,7 @@ import com.gerps.magazine.converters.ProductConverter;
 import com.gerps.magazine.converters.ProductDtoConverter;
 import com.gerps.magazine.dto.ProductDto;
 import com.gerps.magazine.entity.Product;
+import com.gerps.magazine.services.ProductsGroupService;
 import com.gerps.magazine.services.ProductsService;
 import org.junit.Assert;
 import org.junit.Test;
@@ -58,6 +59,9 @@ public class ProductsRestControllerTest {
     @MockBean
     private ProductsService productsService;
 
+    @MockBean
+    private ProductsGroupService productsGroupService;
+
     /*@Test
     public void findProductById() throws Exception {
         //Product testProduct = new Product("Papier PROFIT Flesz 2w bialy");
@@ -70,7 +74,7 @@ public class ProductsRestControllerTest {
         mockMvc.perform(get("/magazine/products/2")
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                *//*.andExpect(jsonPath("id").value(2))
+                *//*.andExpect(jsonPath("orderId").value(2))
                 .andExpect(jsonPath("name", is("Papier PROFIT Flesz 2w bialy")))*//*
         ;
     }*/
@@ -101,10 +105,11 @@ public class ProductsRestControllerTest {
 
         private ProductsService productsService;
         private ProductConverter productConverter;
+        private ProductsGroupService productsGroupService;
 
         @Bean
         public ProductsRestController productsRestController() {
-            return new ProductsRestController(productsService, productConverter);
+            return new ProductsRestController(productsService, productConverter, productsGroupService);
         }
 
     }

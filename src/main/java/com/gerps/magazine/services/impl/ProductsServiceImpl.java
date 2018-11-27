@@ -63,8 +63,8 @@ public class ProductsServiceImpl implements ProductsService {
             logger.info("Found product {}", productIsPresent.getName());
             return productDtoConverter.apply(productIsPresent);
         } else {
-            logger.error("Not found product by id: {}", id);
-            throw  new EntityNotFoundException("Product with id "+id+" was not found in database. Please try again with another id.");
+            logger.error("Not found product by orderId: {}", id);
+            throw  new EntityNotFoundException("Product with orderId "+id+" was not found in database. Please try again with another orderId.");
         }
     }
 
