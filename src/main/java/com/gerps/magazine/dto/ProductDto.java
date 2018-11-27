@@ -45,7 +45,7 @@ public class ProductDto {
     private Long supplier;
 
     private Integer stock;
-    //private BigDecimal price_last_supply;
+    private BigDecimal price;
     private String vat;
 
 }

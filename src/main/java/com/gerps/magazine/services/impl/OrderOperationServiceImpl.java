@@ -5,7 +5,6 @@ import com.gerps.magazine.entity.OrderOperation;
 import com.gerps.magazine.repository.OrderOperationsRepository;
 import com.gerps.magazine.services.OrderOperationService;
 import com.gerps.magazine.services.ProductsService;
-import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

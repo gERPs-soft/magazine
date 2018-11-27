@@ -4,7 +4,6 @@ import com.gerps.magazine.dto.ProductDto;
 import com.gerps.magazine.entity.*;
 import com.gerps.magazine.repository.SuppliersRepository;
 import com.gerps.magazine.services.ProductsGroupService;
-import com.gerps.magazine.services.SupplierService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +11,6 @@ import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 import java.util.Optional;
-import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Function;
 
 /**
@@ -55,13 +53,13 @@ public class ProductConverter implements Function<ProductDto, Product> {
         product.setHeight(productDto.getHeight());
         product.setWeight(productDto.getWeight());
         product.setLength(productDto.getLength());
+        product.setPrice(productDto.getPrice());
         product.setSupplier(supplierObject);
         product.setStock(productDto.getStock());
         product.setVat(Vat.valueOf(String.valueOf(productDto.getVat())));
 
         //narazie nieistniejace w dto
         product.setNumber_in_pallet(1);
-        product.setPrice_last_supply(BigDecimal.ZERO);
 
         return product;
     }

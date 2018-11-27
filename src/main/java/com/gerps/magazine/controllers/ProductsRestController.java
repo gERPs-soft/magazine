@@ -3,7 +3,9 @@ package com.gerps.magazine.controllers;
 import com.gerps.magazine.converters.ProductConverter;
 import com.gerps.magazine.dto.ProductDto;
 import com.gerps.magazine.entity.Product;
-import com.gerps.magazine.exceptions.ResponseDetails;
+import com.gerps.magazine.entity.ProductGroup;
+import com.gerps.magazine.dto.MyResponseDetails;
+import com.gerps.magazine.services.ProductsGroupService;
 import com.gerps.magazine.services.ProductsService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,12 +31,15 @@ public class ProductsRestController {
 
     private ProductsService productsService;
     private ProductConverter productConverter;
+    private ProductsGroupService productsGroupService;
 
     @Autowired
-    public ProductsRestController(ProductsService productsService, ProductConverter productConverter) {
+    public ProductsRestController(ProductsService productsService, ProductConverter productConverter, ProductsGroupService productsGroupService) {
         this.productsService = productsService;
         this.productConverter = productConverter;
+        this.productsGroupService = productsGroupService;
     }
+
 
     @GetMapping("/all")
     public List<ProductDto> findAllProducts() {
@@ -59,22 +64,37 @@ public class ProductsRestController {
             Product product = productConverter.apply(productDto);
             productsService.save(product);
 
-            ResponseDetails details = new ResponseDetails(new Date(), "Product " + productDto.getName() + " add to db.");
+            MyResponseDetails details = new MyResponseDetails(new Date(), "Product " + productDto.getName() + " add to db.");
             return new ResponseEntity(details, HttpStatus.CREATED);
         } else {
             logger.error("RequestBody is empty");
-            ResponseDetails details = new ResponseDetails(new Date(), "Body is empty");
+            MyResponseDetails details = new MyResponseDetails(new Date(), "Body is empty");
             return new ResponseEntity(details, HttpStatus.BAD_REQUEST);
         }
 
     }
 
-    //do aktualizowania poszczegolnych pol productu
-    /*@PatchMapping("/products/{id}")
-    @CrossOrigin(origins = "http://localhost:4200")
+
+    //@todo implements controller to edit products
+    /*@PostMapping("/products/{id}")
     public void editProductById(@PathVariable Long id) {
 
     }*/
+
+
+    @GetMapping("/products/all-group")
+    public List<ProductGroup> findAllProductsGroup() {
+        logger.info("Rest findAllProductsGroup()");
+        return productsGroupService.findAllProductsGroup();
+    }
+
+
+
+
+
+
+
+
 
 
 
@@ -98,6 +118,7 @@ public class ProductsRestController {
                 "    \"length\": 60,\n" +
                 "    \"supplier\": 2,\n" +
                 "    \"stock\": 1440,\n" +
+                "    \"price\": 1.40,\n" +
                 "    \"vat\": \"VAT_23\",\n" +
                 "    \"id\": null" +
                 "}";
@@ -117,4 +138,7 @@ public class ProductsRestController {
                 httpEntity,
                 String.class);
     }
+
+
+
 }

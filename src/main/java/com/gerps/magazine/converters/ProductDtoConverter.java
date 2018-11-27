@@ -21,7 +21,7 @@ public class ProductDtoConverter implements Function<Product, ProductDto> {
                 product.getUnitOfMasure().name(), product.getBarcode(), product.getWeight_unit(),
                 product.getPackageUnit().name(), product.getNumber_in_package(),
                 product.getHeight(), product.getWeight(), product.getLength(),
-                product.getSupplier().getId(), product.getStock(),
+                product.getSupplier().getId(), product.getStock(), product.getPrice(),
                 product.getVat().name());
     }
 }
