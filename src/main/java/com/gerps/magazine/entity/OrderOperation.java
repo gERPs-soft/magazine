@@ -22,11 +22,12 @@ public class OrderOperation {
     private Long id;
 
     private Long orderNumber;
-    private LocalDateTime localDateTime;
+    private LocalDateTime orderDate;
     private Long productId;
     private Integer quantity;
     private Long sellerId;
     private Long customerId;
     private BigDecimal productPrice;
+    private LocalDateTime shippingOrderDate;
     private OrderStatus orderStatus;
 }

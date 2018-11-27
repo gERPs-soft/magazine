@@ -3,6 +3,7 @@ package com.gerps.magazine.dto;
 import com.gerps.magazine.entity.OrderStatus;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
@@ -12,6 +13,7 @@ import java.time.LocalDateTime;
 
 @Data
 @AllArgsConstructor
+@NoArgsConstructor
 public class OrderStatusDetails {
     private Long orderId;
     private LocalDateTime localDateTime;

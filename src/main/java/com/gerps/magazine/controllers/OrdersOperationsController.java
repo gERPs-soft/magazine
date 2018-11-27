@@ -5,7 +5,6 @@ import com.gerps.magazine.dto.OrderItemDto;
 import com.gerps.magazine.dto.OrderStatusDetails;
 import com.gerps.magazine.entity.OrderOperation;
 import com.gerps.magazine.entity.OrderStatus;
-import com.gerps.magazine.dto.MyResponseDetails;
 import com.gerps.magazine.services.OrderOperationService;
 import com.gerps.magazine.services.ProductsService;
 import org.slf4j.Logger;
@@ -14,10 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -53,7 +50,7 @@ public class OrdersOperationsController {
         orderItems.forEach(orderItemDto -> {
             OrderOperation operation = new OrderOperation();
             operation.setOrderNumber(orderNumber);
-            operation.setLocalDateTime(LocalDateTime.now());
+            operation.setOrderDate(LocalDateTime.now());
             operation.setProductId(orderItemDto.getProductId());
             operation.setQuantity(orderItemDto.getQuantity());
             operation.setSellerId(sellerId);
@@ -62,26 +59,13 @@ public class OrdersOperationsController {
             operation.setOrderStatus(OrderStatus.CONFIRMED);
             operationList.add(operation);
         });
+
         orderOperationService.saveOperation(operationList);
 
-        LocalDateTime deliveryTime = LocalDateTime.now();
+        OrderStatusDetails orderStatusDetails = orderOperationService.confirmOrder(operationList);
 
-        if (orderOperationService.checkOrderItemInStock(orderItems)) {
-            logger.info("All products in stock");
+        return new ResponseEntity(orderStatusDetails, HttpStatus.CREATED);
 
-            deliveryTime = deliveryTime.plusDays(2);
-            String deliveryMessage = "All items from order " + orderNumber + " are in stock.\nDelivery time " + deliveryTime;
 
-            OrderStatusDetails statusDetails = new OrderStatusDetails(orderNumber, deliveryTime, deliveryMessage, OrderStatus.CONFIRMED);
-            return new ResponseEntity(statusDetails, HttpStatus.CREATED);
-        } else {
-            logger.error("Stock is to low");
-
-            deliveryTime = deliveryTime.plusDays(4);
-            String deliveryMessage = "Not all products are in stock.\nDelivery time " + deliveryTime;
-            OrderStatusDetails statusDetails = new OrderStatusDetails(orderNumber, deliveryTime, deliveryMessage, OrderStatus.CONFIRMED);
-
-            return new ResponseEntity(statusDetails, HttpStatus.CREATED);
-        }
     }
 }
