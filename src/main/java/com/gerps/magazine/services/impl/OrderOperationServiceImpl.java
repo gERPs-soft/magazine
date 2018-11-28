@@ -46,13 +46,15 @@ public class OrderOperationServiceImpl implements OrderOperationService {
     public OrderStatusDetails confirmOrder(List<OrderOperation> orderItems) {
 
         LocalDateTime deliveryTime = LocalDateTime.now();
+        System.out.println("First delivery time " + deliveryTime);
         OrderStatusDetails statusDetails;
         Long orderNumber = orderItems.get(1).getOrderNumber();
 
         if (checkOrderItemsInStock(orderItems)) {
             logger.info("All products in stock to order number {}", orderNumber);
 
-            deliveryTime = deliveryTime.plusDays(2);
+            deliveryTime = deliveryTime.plusDays(2L);
+            System.out.println("New delivery time = " + deliveryTime);
             String deliveryMessage = "All items from order " + orderNumber + " are in stock.\nDelivery time " + deliveryTime;
 
             statusDetails = new OrderStatusDetails(orderNumber, deliveryTime, deliveryMessage, OrderStatus.CONFIRMED);
@@ -60,8 +62,8 @@ public class OrderOperationServiceImpl implements OrderOperationService {
         } else {
             logger.error("Stock is to low to order number {}", orderNumber);
 
-            deliveryTime = deliveryTime.plusDays(4);
-            String deliveryMessage = "Unfortunately, we do not have all the ordered items in stock. The shipping time will be extended to 4 days";
+            deliveryTime = deliveryTime.plusDays(4L);
+            String deliveryMessage = "Sorry, we do not have all the ordered items in stock. The shipping time will be extended to 4 days";
             statusDetails = new OrderStatusDetails(orderNumber, deliveryTime, deliveryMessage, OrderStatus.CONFIRMED);
             modifyDeliveryTimeInOrder(orderNumber, deliveryTime);
         }
