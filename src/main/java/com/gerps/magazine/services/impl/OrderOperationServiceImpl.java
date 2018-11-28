@@ -46,7 +46,6 @@ public class OrderOperationServiceImpl implements OrderOperationService {
     public OrderStatusDetails confirmOrder(List<OrderOperation> orderItems) {
 
         LocalDateTime deliveryTime = LocalDateTime.now();
-        System.out.println("First delivery time " + deliveryTime);
         OrderStatusDetails statusDetails;
         Long orderNumber = orderItems.get(1).getOrderNumber();
 
@@ -54,9 +53,8 @@ public class OrderOperationServiceImpl implements OrderOperationService {
             logger.info("All products in stock to order number {}", orderNumber);
 
             deliveryTime = deliveryTime.plusDays(2L);
-            System.out.println("New delivery time = " + deliveryTime);
             String deliveryMessage = "All items from order " + orderNumber + " are in stock.\nDelivery time " + deliveryTime;
-
+            modifyDeliveryTimeInOrder(orderNumber, deliveryTime);
             statusDetails = new OrderStatusDetails(orderNumber, deliveryTime, deliveryMessage, OrderStatus.CONFIRMED);
 
         } else {
