@@ -3,26 +3,27 @@ package com.gerps.magazine.controllers;
 import com.gerps.magazine.converters.ProductConverter;
 import com.gerps.magazine.dto.ProductDto;
 import com.gerps.magazine.entity.Product;
-import com.gerps.magazine.exceptions.ErrorDetails;
-import com.gerps.magazine.exceptions.ResponseDetails;
+import com.gerps.magazine.entity.ProductGroup;
+import com.gerps.magazine.dto.MyResponseDetails;
+import com.gerps.magazine.services.ProductsGroupService;
 import com.gerps.magazine.services.ProductsService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by Grzesiek on 2018-11-18
  */
 
 @RestController
-@RequestMapping(value = "/magazine")
+@RequestMapping(value = "/magazine/products")
 @CrossOrigin(origins = "http://localhost:4200")
 public class ProductsRestController {
 
@@ -30,20 +31,23 @@ public class ProductsRestController {
 
     private ProductsService productsService;
     private ProductConverter productConverter;
+    private ProductsGroupService productsGroupService;
 
     @Autowired
-    public ProductsRestController(ProductsService productsService, ProductConverter productConverter) {
+    public ProductsRestController(ProductsService productsService, ProductConverter productConverter, ProductsGroupService productsGroupService) {
         this.productsService = productsService;
         this.productConverter = productConverter;
+        this.productsGroupService = productsGroupService;
     }
 
-    @GetMapping("/products/all")
+
+    @GetMapping("/all")
     public List<ProductDto> findAllProducts() {
         logger.info("Rest findAllProducts()");
         return productsService.findAllProducts();
     }
 
-    @GetMapping("/products/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<ProductDto> findProductById(@PathVariable Long id) {
         logger.info("Rest findProductById={}", id);
 
@@ -51,36 +55,52 @@ public class ProductsRestController {
         return new ResponseEntity<>(productDto, HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/products/add/new", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE,
-            produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/add/new", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     private ResponseEntity addProduct(@RequestBody ProductDto productDto) {
         logger.info("Try add new product {}", productDto.getName());
+
+        ResponseEntity responseEntity;
 
         if (productDto != null) {
             logger.info("productDto is not empty, save new product {}", productDto.getName());
             Product product = productConverter.apply(productDto);
             productsService.save(product);
 
-            ResponseDetails details = new ResponseDetails(new Date(), "Product " + productDto.getName() + " add to db.");
+            MyResponseDetails details = new MyResponseDetails(new Date(), "Product " + productDto.getName() + " add to db.");
             return new ResponseEntity(details, HttpStatus.CREATED);
         } else {
-            logger.error("Body is empty");
-            ResponseDetails details = new ResponseDetails(new Date(), "Body is empty");
+            logger.error("RequestBody is empty");
+            MyResponseDetails details = new MyResponseDetails(new Date(), "Body is empty");
             return new ResponseEntity(details, HttpStatus.BAD_REQUEST);
         }
 
     }
 
-    //do aktualizowania poszczegolnych pol productu
-    /*@PatchMapping("/products/{id}")
-    @CrossOrigin(origins = "http://localhost:4200")
-    public void editProductById(@PathVariable Long id) {
+
+    //@todo implements controller to edit products
+    /*@PostMapping("/products/{orderId}")
+    public void editProductById(@PathVariable Long orderId) {
 
     }*/
 
-    //metodka testowa wysylajaca POSTem JSONA z nowy produktem
 
-    //@CrossOrigin(origins = "http://localhost:8080")
+    @GetMapping("/products/all-group")
+    public List<ProductGroup> findAllProductsGroup() {
+        logger.info("Rest findAllProductsGroup()");
+        return productsGroupService.findAllProductsGroup();
+    }
+
+
+
+
+
+
+
+
+
+
+
+    //metodka testowa wysylajaca POSTem JSONA z nowy produktem
     @GetMapping("/addNewExamplesProduct")
     @CrossOrigin(origins = "http://localhost:8080")
     public void addNewExampleProduct() {
@@ -93,31 +113,34 @@ public class ProductsRestController {
                 "    \"unitOfMasure\": \"szt\",\n" +
                 "    \"barcode\": \"112200444413\",\n" +
                 "    \"weight_unit\": 4,\n" +
-                "    \"package_unit\": 2,\n" +
+                "    \"package_unit\": \"Karton\",\n" +
                 "    \"number_in_package\": 12,\n" +
                 "    \"height\": 20,\n" +
                 "    \"weight\": 40,\n" +
                 "    \"length\": 60,\n" +
                 "    \"supplier\": 2,\n" +
                 "    \"stock\": 1440,\n" +
+                "    \"price\": 1.40,\n" +
                 "    \"vat\": \"VAT_23\",\n" +
-                "    \"pkwiU\": \"\",\n" +
-                "    \"id\": 3\n" +
+                "    \"orderId\": null" +
                 "}";
 
         HttpHeaders httpHeaders = new HttpHeaders();
         //httpHeaders.add(HttpHeaders.CONTENT_TYPE, "application/json");
         httpHeaders.setContentType(MediaType.APPLICATION_JSON);
+        httpHeaders.setContentLanguage(Locale.JAPANESE);
 
         HttpEntity httpEntity = new HttpEntity(jsonToSent, httpHeaders);
-        //HttpEntity httpEntity1 = new HttpEntity(jsonToSent)
 
         RestTemplate restTemplate = new RestTemplate();
 
         ResponseEntity<String> exchange = restTemplate.exchange(
-                "http://localhost:8080/magazine/products/add",
+                "http://localhost:8080/magazine/products/add/new",
                 HttpMethod.POST,
                 httpEntity,
                 String.class);
     }
+
+
+
 }

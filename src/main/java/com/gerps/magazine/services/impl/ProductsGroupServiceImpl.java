@@ -51,11 +51,11 @@ public class ProductsGroupServiceImpl implements ProductsGroupService {
 
         if (groupOptional.isPresent()) {
             ProductGroup productGroup = groupOptional.get();
-            logger.info("Found products group id={} name={}", id, productGroup.getName());
+            logger.info("Found products group orderId={} name={}", id, productGroup.getName());
             return productGroup;
         }else{
-            logger.error("Product group id={} not found", id);
-            throw new EntityNotFoundException("Product group by id="+id+" not found in database. Please try again later.");
+            logger.error("Product group orderId={} not found", id);
+            throw new EntityNotFoundException("Product group by orderId="+id+" not found in database. Please try again later.");
         }
     }
 }

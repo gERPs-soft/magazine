@@ -1,5 +1,6 @@
 package com.gerps.magazine.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.gerps.magazine.entity.PackageUnit;
 import com.gerps.magazine.entity.ProductGroup;
 import com.gerps.magazine.entity.Supplier;
@@ -20,6 +21,7 @@ import java.math.BigDecimal;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+//@JsonIgnoreProperties(ignoreUnknown = true)
 public class ProductDto {
 
     private Long id;
@@ -43,7 +45,7 @@ public class ProductDto {
     private Long supplier;
 
     private Integer stock;
-    //private BigDecimal price_last_supply;
+    private BigDecimal price;
     private String vat;
 
 }

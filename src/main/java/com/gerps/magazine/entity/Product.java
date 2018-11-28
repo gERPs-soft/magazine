@@ -1,6 +1,5 @@
 package com.gerps.magazine.entity;
 
-import com.fasterxml.jackson.annotation.JacksonInject;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -50,7 +49,7 @@ public class Product {
     private Supplier supplier;
 
     private Integer stock;
-    private BigDecimal price_last_supply;
+    private BigDecimal price;
 
     @Enumerated(EnumType.STRING)
     private Vat vat;
@@ -60,7 +59,7 @@ public class Product {
         this.name = name;
     }*/
 
-    public Product(String assort_index, String name, ProductGroup product_group, UnitOfMasure unitOfMasure, String barcode, Double weight_unit, PackageUnit packageUnit, Integer number_in_package, Integer height, Integer weight, Integer length, Integer number_in_pallet, Supplier supplier, Integer stock, BigDecimal price_last_supply, Vat vat) {
+    public Product(String assort_index, String name, ProductGroup product_group, UnitOfMasure unitOfMasure, String barcode, Double weight_unit, PackageUnit packageUnit, Integer number_in_package, Integer height, Integer weight, Integer length, Integer number_in_pallet, Supplier supplier, Integer stock, BigDecimal price, Vat vat) {
         this.assort_index = assort_index;
         this.name = name;
         this.product_group = product_group;
@@ -75,7 +74,7 @@ public class Product {
         this.number_in_pallet = number_in_pallet;
         this.supplier = supplier;
         this.stock = stock;
-        this.price_last_supply = price_last_supply;
+        this.price = price;
         this.vat = vat;
     }
 }

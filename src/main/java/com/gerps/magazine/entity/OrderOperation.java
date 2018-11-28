@@ -21,11 +21,13 @@ public class OrderOperation {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private LocalDateTime localDateTime;
+    private Long orderNumber;
+    private LocalDateTime orderDate;
     private Long productId;
     private Integer quantity;
     private Long sellerId;
     private Long customerId;
     private BigDecimal productPrice;
+    private LocalDateTime shippingOrderDate;
     private OrderStatus orderStatus;
 }

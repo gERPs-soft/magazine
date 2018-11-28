@@ -16,7 +16,7 @@ import java.util.List;
 //This is OrderDto from Order Api
 public class OrderDto {
 
-    private Long id;
+    private Long orderId;
     private Long sellerId;
     private Long customerId;
     private List<OrderItemDto> items;

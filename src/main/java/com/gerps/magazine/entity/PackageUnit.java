@@ -12,17 +12,12 @@ import javax.persistence.Id;
  * Created by Grzesiek on 2018-11-17
  */
 
-public enum  PackageUnit {
+public enum PackageUnit {
 
-    /*@Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
-
-    private String name;*/
-
-Karton,
-Folia,
-Paleta,
-Box;
+    Karton,
+    Folia,
+    Baniak,
+    Paleta,
+    Box
 
 }

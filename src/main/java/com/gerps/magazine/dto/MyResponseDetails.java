@@ -1,4 +1,4 @@
-package com.gerps.magazine.exceptions;
+package com.gerps.magazine.dto;
 
 import lombok.Data;
 
@@ -9,11 +9,11 @@ import java.util.Date;
  */
 
 @Data
-public class ResponseDetails {
+public class MyResponseDetails {
     private Date timestamp;
     private String message;
 
-    public ResponseDetails(Date timestamp, String message) {
+    public MyResponseDetails(Date timestamp, String message) {
         super();
         this.timestamp = timestamp;
         this.message = message;

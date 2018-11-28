@@ -2,10 +2,7 @@ package com.gerps.magazine.converters;
 
 import com.gerps.magazine.dto.ProductDto;
 import com.gerps.magazine.entity.Product;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
-
 import java.util.function.Function;
 
 /**
@@ -15,6 +12,8 @@ import java.util.function.Function;
 @Component
 public class ProductDtoConverter implements Function<Product, ProductDto> {
 
+    //@todo zaimplementuj dynamiczne wyliczanie stock produktów, na podstawie zamówień itp.
+
     @Override
     public ProductDto apply(Product product) {
 
@@ -22,7 +21,7 @@ public class ProductDtoConverter implements Function<Product, ProductDto> {
                 product.getUnitOfMasure().name(), product.getBarcode(), product.getWeight_unit(),
                 product.getPackageUnit().name(), product.getNumber_in_package(),
                 product.getHeight(), product.getWeight(), product.getLength(),
-                product.getSupplier().getId(), product.getStock(),
+                product.getSupplier().getId(), product.getStock(), product.getPrice(),
                 product.getVat().name());
     }
 }

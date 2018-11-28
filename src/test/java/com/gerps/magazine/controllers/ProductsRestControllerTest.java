@@ -6,6 +6,7 @@ import com.gerps.magazine.converters.ProductConverter;
 import com.gerps.magazine.converters.ProductDtoConverter;
 import com.gerps.magazine.dto.ProductDto;
 import com.gerps.magazine.entity.Product;
+import com.gerps.magazine.services.ProductsGroupService;
 import com.gerps.magazine.services.ProductsService;
 import org.junit.Assert;
 import org.junit.Test;
@@ -58,11 +59,10 @@ public class ProductsRestControllerTest {
     @MockBean
     private ProductsService productsService;
 
-    @Test
-    public void findAllProducts() {
-    }
+    @MockBean
+    private ProductsGroupService productsGroupService;
 
-    @Test
+    /*@Test
     public void findProductById() throws Exception {
         //Product testProduct = new Product("Papier PROFIT Flesz 2w bialy");
         //ProductDto testProductDto = productDtoConverter.apply(testProduct);
@@ -71,18 +71,18 @@ public class ProductsRestControllerTest {
 
         //given(productsService.findProductById(2l)).willReturn(testProductDto);
 
-        mockMvc.perform(get("/magazin/products/2")
+        mockMvc.perform(get("/magazine/products/2")
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                /*.andExpect(jsonPath("id").value(2))
-                .andExpect(jsonPath("name", is("Papier PROFIT Flesz 2w bialy")))*/
+                *//*.andExpect(jsonPath("orderId").value(2))
+                .andExpect(jsonPath("name", is("Papier PROFIT Flesz 2w bialy")))*//*
         ;
-    }
+    }*/
 
     @Test
     public void findProductByName() throws Exception{
         RestTemplate restTemplate = new RestTemplate();
-        String resourceUrl = "http://localhost:8080/magazin/products/1";
+        String resourceUrl = "http://localhost:8080/magazine/products/1";
         ResponseEntity<String> response
                 = restTemplate.getForEntity(resourceUrl, String.class);
         assertThat(response.getStatusCode(), equalTo(HttpStatus.OK));
@@ -105,10 +105,11 @@ public class ProductsRestControllerTest {
 
         private ProductsService productsService;
         private ProductConverter productConverter;
+        private ProductsGroupService productsGroupService;
 
         @Bean
         public ProductsRestController productsRestController() {
-            return new ProductsRestController(productsService, productConverter);
+            return new ProductsRestController(productsService, productConverter, productsGroupService);
         }
 
     }
