@@ -68,7 +68,7 @@ public class OrderOperationServiceImpl implements OrderOperationService {
         return statusDetails;
     }
 
-    private void modifyDeliveryTimeInOrder(Long orderId, LocalDateTime modifyDeliveryTime) {
+    public void modifyDeliveryTimeInOrder(Long orderId, LocalDateTime modifyDeliveryTime) {
         logger.info("Modify/set delivery time in order number {} and save to db.", orderId);
 
         List<OrderOperation> operationList = findAllOperationsByOrderId(orderId);

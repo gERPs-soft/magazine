@@ -3,6 +3,7 @@ package com.gerps.magazine.services;
 import com.gerps.magazine.dto.OrderItemDto;
 import com.gerps.magazine.dto.OrderStatusDetails;
 import com.gerps.magazine.entity.OrderOperation;
+import com.gerps.magazine.entity.OrderStatus;
 
 import java.util.List;
 
@@ -19,4 +20,6 @@ public interface OrderOperationService {
     boolean checkOrderItemsInStock(List<OrderOperation> orderItems);
 
     OrderStatusDetails confirmOrder(List<OrderOperation> orderItems);
+
+    //void changeStatusOrderOp(Long orderId, OrderStatus changedStatus);
 }
