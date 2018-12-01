@@ -5,6 +5,7 @@ import com.gerps.magazine.dto.ProductDto;
 import com.gerps.magazine.entity.Product;
 import com.gerps.magazine.entity.ProductGroup;
 import com.gerps.magazine.dto.MyResponseDetails;
+import com.gerps.magazine.exceptions.EntityNotFoundException;
 import com.gerps.magazine.services.ProductsGroupService;
 import com.gerps.magazine.services.ProductsService;
 import org.slf4j.Logger;
@@ -51,8 +52,13 @@ public class ProductsRestController {
     public ResponseEntity<ProductDto> findProductById(@PathVariable Long id) {
         logger.info("Rest findProductById={}", id);
 
-        ProductDto productDto = productsService.findProductById(id);
-        return new ResponseEntity<>(productDto, HttpStatus.OK);
+        try {
+            ProductDto productDto = productsService.findProductById(id);
+            return new ResponseEntity<>(productDto, HttpStatus.OK);
+        } catch (EntityNotFoundException e) {
+            e.printStackTrace();
+        }
+        return new ResponseEntity<>(HttpStatus.valueOf("Can't find product with id " + id));
     }
 
     @PostMapping(value = "/add/new", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -89,15 +95,6 @@ public class ProductsRestController {
         logger.info("Rest findAllProductsGroup()");
         return productsGroupService.findAllProductsGroup();
     }
-
-
-
-
-
-
-
-
-
 
 
     //metodka testowa wysylajaca POSTem JSONA z nowy produktem
@@ -140,7 +137,6 @@ public class ProductsRestController {
                 httpEntity,
                 String.class);
     }
-
 
 
 }
