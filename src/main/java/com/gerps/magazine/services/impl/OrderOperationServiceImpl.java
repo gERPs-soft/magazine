@@ -52,23 +52,23 @@ public class OrderOperationServiceImpl implements OrderOperationService {
         if (checkOrderItemsInStock(orderItems)) {
             logger.info("All products in stock to order number {}", orderNumber);
 
-            deliveryTime = deliveryTime.plusDays(2);
+            deliveryTime = deliveryTime.plusDays(2L);
             String deliveryMessage = "All items from order " + orderNumber + " are in stock.\nDelivery time " + deliveryTime;
-
+            modifyDeliveryTimeInOrder(orderNumber, deliveryTime);
             statusDetails = new OrderStatusDetails(orderNumber, deliveryTime, deliveryMessage, OrderStatus.CONFIRMED);
 
         } else {
             logger.error("Stock is to low to order number {}", orderNumber);
 
-            deliveryTime = deliveryTime.plusDays(4);
-            String deliveryMessage = "Unfortunately, we do not have all the ordered items in stock. The shipping time will be extended to 4 days";
+            deliveryTime = deliveryTime.plusDays(4L);
+            String deliveryMessage = "Sorry, we do not have all the ordered items in stock. The shipping time will be extended to 4 days";
             statusDetails = new OrderStatusDetails(orderNumber, deliveryTime, deliveryMessage, OrderStatus.CONFIRMED);
             modifyDeliveryTimeInOrder(orderNumber, deliveryTime);
         }
         return statusDetails;
     }
 
-    private void modifyDeliveryTimeInOrder(Long orderId, LocalDateTime modifyDeliveryTime) {
+    public void modifyDeliveryTimeInOrder(Long orderId, LocalDateTime modifyDeliveryTime) {
         logger.info("Modify/set delivery time in order number {} and save to db.", orderId);
 
         List<OrderOperation> operationList = findAllOperationsByOrderId(orderId);

@@ -18,7 +18,7 @@ import java.util.List;
  */
 
 @RestController
-@RequestMapping("magazin/suppliers")
+@RequestMapping("magazine/suppliers")
 @CrossOrigin(origins = "http://localhost:4200")
 public class SuppliersRestController {
 
