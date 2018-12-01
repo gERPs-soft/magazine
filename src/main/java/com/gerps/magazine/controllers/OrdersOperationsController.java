@@ -72,6 +72,8 @@ public class OrdersOperationsController {
         OrderStatusDetails orderStatusDetails = orderOperationService.confirmOrder(operationList);
 
         return new ResponseEntity(orderStatusDetails, HttpStatus.CREATED);
+
+        //@todo dodaj sprawdzanie czy zamówienie o przesyłanym id już istnieje
     }
 
     @PostMapping("/change-status-order")
