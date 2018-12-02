@@ -48,6 +48,7 @@ public class OrderOperationServiceImpl implements OrderOperationService {
         LocalDateTime deliveryTime = LocalDateTime.now();
         OrderStatusDetails statusDetails;
         Long orderNumber = orderItems.get(1).getOrderNumber();
+        // RW: avoid magic numbers. If you need get first, second value etc. put it in a constant with sufficient name.
 
         if (checkOrderItemsInStock(orderItems)) {
             logger.info("All products in stock to order number {}", orderNumber);

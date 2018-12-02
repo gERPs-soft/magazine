@@ -15,8 +15,6 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 /**
  * Created by Grzesiek on 2018-11-18
@@ -41,6 +39,7 @@ public class ProductsServiceImpl implements ProductsService {
     public List<ProductDto> findAllProducts() throws EntityNotFoundException {
         logger.info("find all products()");
 
+        // RW: rename to products.
         Iterable<Product> productList = productsRepository.findAll();
 
         if (productList != null) {
@@ -48,6 +47,7 @@ public class ProductsServiceImpl implements ProductsService {
             productList.forEach(product -> productDtoList.add(productDtoConverter.apply(product)));
             return productDtoList;
         } else {
+            // RW: error is to high in this case. This is not a bug but rather situation where we have lack of certain assortments.
             logger.error("Products list is empty. Not found any products");
             throw new EntityNotFoundException("Products list is empty. No products found in database. Please try again later.");
         }

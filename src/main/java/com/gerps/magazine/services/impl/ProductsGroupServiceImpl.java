@@ -31,6 +31,8 @@ public class ProductsGroupServiceImpl implements ProductsGroupService {
     @Override
     public List<ProductGroup> findAllProductsGroup() throws EntityNotFoundException {
 
+        // RW: thia name should not contain anything from Java's internal data representation.
+        // Simple: productGroups will be better.
         Iterable<ProductGroup> productGroupsIterable = productsGroupRepository.findAll();
 
         if(productGroupsIterable!=null){

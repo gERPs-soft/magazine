@@ -13,6 +13,7 @@ import java.util.function.Function;
 @Component
 public class SupplierDtoConverter implements Function<Supplier, SupplierDto> {
 
+    // RW: avoid naming like 's' or similar.
     @Override
     public SupplierDto apply(Supplier s) {
 

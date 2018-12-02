@@ -1,10 +1,10 @@
 package com.gerps.magazine.controllers;
 
 import com.gerps.magazine.converters.ProductConverter;
+import com.gerps.magazine.dto.MyResponseDetails;
 import com.gerps.magazine.dto.ProductDto;
 import com.gerps.magazine.entity.Product;
 import com.gerps.magazine.entity.ProductGroup;
-import com.gerps.magazine.dto.MyResponseDetails;
 import com.gerps.magazine.exceptions.EntityNotFoundException;
 import com.gerps.magazine.services.ProductsGroupService;
 import com.gerps.magazine.services.ProductsService;
@@ -52,6 +52,9 @@ public class ProductsRestController {
     public ResponseEntity<ProductDto> findProductById(@PathVariable Long id) {
         logger.info("Rest findProductById={}", id);
 
+        // RW: if product will not be found you can ranturn Optional and rather not throw exception.
+        // Exception mainly signals error. It will be better if you only log the fact that product with given ID could not be found.
+        // In this case it is better to return 404 (NOT FOUND);
         try {
             ProductDto productDto = productsService.findProductById(id);
             return new ResponseEntity<>(productDto, HttpStatus.OK);
@@ -67,6 +70,7 @@ public class ProductsRestController {
 
         ResponseEntity responseEntity;
 
+        // RW: I think you can move conversion to service layer but it is only suggestion.
         if (productDto != null) {
             logger.info("productDto is not empty, save new product {}", productDto.getName());
             Product product = productConverter.apply(productDto);
@@ -82,7 +86,7 @@ public class ProductsRestController {
 
     }
 
-
+    // RW: remove dead code.
     //@todo implements controller to edit products
     /*@PostMapping("/products/{orderId}")
     public void editProductById(@PathVariable Long orderId) {
@@ -96,6 +100,8 @@ public class ProductsRestController {
         return productsGroupService.findAllProductsGroup();
     }
 
+    // RW: do test like here:
+    //https://spring.io/guides/gs/testing-web/
 
     //metodka testowa wysylajaca POSTem JSONA z nowy produktem
     @GetMapping("/addNewExamplesProduct")

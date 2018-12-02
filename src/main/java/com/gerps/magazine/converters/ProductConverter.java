@@ -9,7 +9,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.math.BigDecimal;
 import java.util.Optional;
 import java.util.function.Function;
 
@@ -23,6 +22,8 @@ public class ProductConverter implements Function<ProductDto, Product> {
     private final static Logger logger = LoggerFactory.getLogger(ProductConverter.class);
     //private final AtomicLong counter = new AtomicLong();
 
+    // RW: converters should not be in relation with services or repos. The should receive objects on which
+    // they will be working on (prefer loose coupling).
     private ProductsGroupService productsGroupService;
     private SuppliersRepository suppliersRepository;
 

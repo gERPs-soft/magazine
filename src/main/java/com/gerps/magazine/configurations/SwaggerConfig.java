@@ -10,6 +10,6 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @EnableSwagger2
 @Configuration
 public class SwaggerConfig {
-
+    //RW: remove extra empty lines - one should be just enough.
 
 }
