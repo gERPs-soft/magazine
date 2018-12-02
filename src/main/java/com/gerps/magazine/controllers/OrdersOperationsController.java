@@ -11,10 +11,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.*;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
-
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -28,7 +28,7 @@ import java.util.List;
 @CrossOrigin(origins = "http://localhost:4200")
 public class OrdersOperationsController {
 
-    private static final Logger logger = LoggerFactory.getLogger(OrdersOperationsController.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(OrdersOperationsController.class);
     private ProductsService productsService;
     private OrderOperationService orderOperationService;
 
@@ -42,30 +42,25 @@ public class OrdersOperationsController {
     }
 
     @PostMapping(value = "/add-order"  /*, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE*/)
-    private ResponseEntity addNewOrder(@RequestBody OrderDto orderDto) {
+    private ResponseEntity<OrderStatusDetails> addNewOrder(@RequestBody OrderDto orderDto) {
 
-        Long orderNumber = orderDto.getOrderId();
-        Long sellerId = orderDto.getSellerId();
-        Long customerId = orderDto.getCustomerId();
-        List<OrderItemDto> orderItems = orderDto.getItems();
+        LOGGER.info("Add new order from customer {} with {} items.", orderDto.getCustomerId(), orderDto.getItems().size());
 
-        logger.info("Add new order from customer {} with {} items.", customerId, orderItems.size());
+        List<OrderOperation> operationList = orderItemsToOrderOperationsList(orderDto);
 
-        List<OrderOperation> operationList = new ArrayList<>();
-
-        orderItems.forEach(orderItemDto -> {
+        /*orderItems.forEach(orderItemDto -> {
             OrderOperation operation = new OrderOperation();
-            operation.setOrderNumber(orderNumber);
+            operation.setOrderNumber(orderDto.getOrderId());
             operation.setOrderDate(LocalDateTime.now());
             operation.setProductId(orderItemDto.getProductId());
             operation.setQuantity(orderItemDto.getQuantity());
-            operation.setSellerId(sellerId);
-            operation.setCustomerId(customerId);
+            operation.setSellerId(orderDto.getSellerId());
+            operation.setCustomerId(orderDto.getCustomerId());
             operation.setProductPrice(orderItemDto.getProductPrice());
             operation.setShippingOrderDate(LocalDateTime.now());
             operation.setOrderStatus(OrderStatus.CONFIRMED);
             operationList.add(operation);
-        });
+        });*/
 
         orderOperationService.saveOperation(operationList);
 
@@ -85,12 +80,31 @@ public class OrdersOperationsController {
         ResponseEntity responseEntity = restTemplate.postForEntity(orderUrlServer + "/order/update_status", orderStatusDetails, ResponseEntity.class);
 
         if (responseEntity.getStatusCode().is2xxSuccessful()) {
-            //orderOperationService.changeStatusOrderOp(orderId, changedStatus);
             orderOperToChangeStatus.forEach(orderOperation -> orderOperation.setOrderStatus(changedStatus));
             orderOperationService.saveOperation(orderOperToChangeStatus);
             return new ResponseEntity(null, HttpStatus.CREATED);
         } else {
             return new ResponseEntity(HttpStatus.BAD_REQUEST);
         }
+    }
+
+    private List<OrderOperation> orderItemsToOrderOperationsList(OrderDto orderDto){
+        List<OrderOperation> orderItemsToConvert = new ArrayList<>();
+        List<OrderItemDto> orderItems = orderDto.getItems();
+
+        orderItems.forEach(orderItemDto -> {
+            OrderOperation operation = new OrderOperation();
+            operation.setOrderNumber(orderDto.getOrderId());
+            operation.setOrderDate(LocalDateTime.now());
+            operation.setProductId(orderItemDto.getProductId());
+            operation.setQuantity(orderItemDto.getQuantity());
+            operation.setSellerId(orderDto.getSellerId());
+            operation.setCustomerId(orderDto.getCustomerId());
+            operation.setProductPrice(orderItemDto.getProductPrice());
+            operation.setShippingOrderDate(LocalDateTime.now());
+            operation.setOrderStatus(OrderStatus.CONFIRMED);
+            orderItemsToConvert.add(operation);
+        });
+        return orderItemsToConvert;
     }
 }

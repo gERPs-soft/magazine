@@ -21,7 +21,7 @@ import java.util.List;
 @Service
 public class OrderOperationServiceImpl implements OrderOperationService {
 
-    private static final Logger logger = LoggerFactory.getLogger(OrderOperationServiceImpl.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(OrderOperationServiceImpl.class);
     private OrderOperationsRepository orderOperationsRepository;
     private ProductsService productsService;
 
@@ -33,7 +33,7 @@ public class OrderOperationServiceImpl implements OrderOperationService {
 
     @Override
     public void saveOperation(List<OrderOperation> operations) {
-        logger.info("Save {} new OrderOperations to db.", operations.size());
+        LOGGER.info("Save {} new OrderOperations to db.", operations.size());
         orderOperationsRepository.saveAll(operations);
     }
 
@@ -47,20 +47,22 @@ public class OrderOperationServiceImpl implements OrderOperationService {
 
         LocalDateTime deliveryTime = LocalDateTime.now();
         OrderStatusDetails statusDetails;
-        Long orderNumber = orderItems.get(1).getOrderNumber();
+        Long orderNumber = orderItems.get(0).getOrderNumber();
+        Long standardDeliveryTime = 2l;
+        Long longerDeliveryTime = 4l;
 
         if (checkOrderItemsInStock(orderItems)) {
-            logger.info("All products in stock to order number {}", orderNumber);
+            LOGGER.info("All products in stock to order number {}", orderNumber);
 
-            deliveryTime = deliveryTime.plusDays(2L);
+            deliveryTime = deliveryTime.plusDays(standardDeliveryTime);
             String deliveryMessage = "All items from order " + orderNumber + " are in stock.\nDelivery time " + deliveryTime;
             modifyDeliveryTimeInOrder(orderNumber, deliveryTime);
             statusDetails = new OrderStatusDetails(orderNumber, deliveryTime, deliveryMessage, OrderStatus.CONFIRMED);
 
         } else {
-            logger.error("Stock is to low to order number {}", orderNumber);
+            LOGGER.error("Stock is to low to order number {}", orderNumber);
 
-            deliveryTime = deliveryTime.plusDays(4L);
+            deliveryTime = deliveryTime.plusDays(longerDeliveryTime);
             String deliveryMessage = "Sorry, we do not have all the ordered items in stock. The shipping time will be extended to 4 days";
             statusDetails = new OrderStatusDetails(orderNumber, deliveryTime, deliveryMessage, OrderStatus.CONFIRMED);
             modifyDeliveryTimeInOrder(orderNumber, deliveryTime);
@@ -69,7 +71,7 @@ public class OrderOperationServiceImpl implements OrderOperationService {
     }
 
     public void modifyDeliveryTimeInOrder(Long orderId, LocalDateTime modifyDeliveryTime) {
-        logger.info("Modify/set delivery time in order number {} and save to db.", orderId);
+        LOGGER.info("Modify/set delivery time in order number {} and save to db.", orderId);
 
         List<OrderOperation> operationList = findAllOperationsByOrderId(orderId);
         operationList.forEach(orderOperation -> orderOperation.setShippingOrderDate(modifyDeliveryTime));
@@ -78,7 +80,7 @@ public class OrderOperationServiceImpl implements OrderOperationService {
     }
 
     public boolean checkOrderItemsInStock(List<OrderOperation> orderOperations) {
-        logger.info("Check if all products from the order {} are in stock", orderOperations.get(1).getOrderNumber());
+        LOGGER.info("Check if all products from the order {} are in stock", orderOperations.get(1).getOrderNumber());
 
         boolean allInStock = false;
 

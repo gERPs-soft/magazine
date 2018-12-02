@@ -4,7 +4,7 @@ import com.gerps.magazine.converters.ProductConverter;
 import com.gerps.magazine.dto.ProductDto;
 import com.gerps.magazine.entity.Product;
 import com.gerps.magazine.entity.ProductGroup;
-import com.gerps.magazine.dto.MyResponseDetails;
+import com.gerps.magazine.dto.ResponseDetails;
 import com.gerps.magazine.exceptions.EntityNotFoundException;
 import com.gerps.magazine.services.ProductsGroupService;
 import com.gerps.magazine.services.ProductsService;
@@ -28,7 +28,7 @@ import java.util.Locale;
 @CrossOrigin(origins = "http://localhost:4200")
 public class ProductsRestController {
 
-    private static final Logger logger = LoggerFactory.getLogger(ProductsRestController.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ProductsRestController.class);
 
     private ProductsService productsService;
     private ProductConverter productConverter;
@@ -43,13 +43,13 @@ public class ProductsRestController {
 
     @GetMapping("/all")
     public List<ProductDto> findAllProducts() {
-        logger.info("Rest findAllProducts()");
+        LOGGER.info("Rest findAllProducts()");
         return productsService.findAllProducts();
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<ProductDto> findProductById(@PathVariable Long id) {
-        logger.info("Rest findProductById={}", id);
+        LOGGER.info("Rest findProductById={}", id);
 
         try {
             ProductDto productDto = productsService.findProductById(id);
@@ -63,33 +63,33 @@ public class ProductsRestController {
     @PostMapping(value = "/save", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity addProduct(@RequestBody ProductDto productDto) {
 
-        MyResponseDetails details;
+        ResponseDetails details;
         Long productId = productDto.getId();
 
         if (productDto != null) {
 
             if (productId == null) {
-                logger.info("productDto is not empty, save new product {}", productDto.getName());
-                details = new MyResponseDetails(new Date(), "Product " + productDto.getName() + " add to db.");
+                LOGGER.info("productDto is not empty, save new product {}", productDto.getName());
+                details = new ResponseDetails(new Date(), "Product " + productDto.getName() + " add to db.");
                 Product product = productConverter.apply(productDto);
                 productsService.save(product);
 
             } else if (productsService.findProductById(productId) != null) {
-                logger.info("Edit product id={}", productId);
-                details = new MyResponseDetails(new Date(), "Product id=" + productId + " edit in db.");
+                LOGGER.info("Edit product id={}", productId);
+                details = new ResponseDetails(new Date(), "Product id=" + productId + " edit in db.");
 
                 Product product = productConverter.apply(productDto);
                 productsService.save(product);
             } else {
-                logger.error("Product id={} not found in db!", productId);
-                details = new MyResponseDetails(new Date(), "Product " + productId + " is not found in db. Please try with another id.");
+                LOGGER.error("Product id={} not found in db!", productId);
+                details = new ResponseDetails(new Date(), "Product " + productId + " is not found in db. Please try with another id.");
             }
             return new ResponseEntity(details, HttpStatus.CREATED);
 
         } else {
-            logger.error("RequestBody is empty");
+            LOGGER.error("RequestBody is empty");
 
-            details = new MyResponseDetails(new Date(), "Body is empty");
+            details = new ResponseDetails(new Date(), "Body is empty");
             return new ResponseEntity(details, HttpStatus.BAD_REQUEST);
         }
     }
@@ -102,7 +102,7 @@ public class ProductsRestController {
 
     @GetMapping("/all-group")
     public List<ProductGroup> findAllProductsGroup() {
-        logger.info("Rest findAllProductsGroup()");
+        LOGGER.info("Rest findAllProductsGroup()");
         return productsGroupService.findAllProductsGroup();
     }
 
@@ -110,7 +110,7 @@ public class ProductsRestController {
     @GetMapping("/addNewExamplesProduct")
     @CrossOrigin(origins = "http://localhost:8080")
     public void addNewExampleProduct() {
-        logger.info("addNewExampleProduct()");
+        LOGGER.info("addNewExampleProduct()");
 
         String jsonToSent = "{" +
                 "    \"assort_index\": \"1.07.002\",\n" +

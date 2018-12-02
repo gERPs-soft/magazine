@@ -9,7 +9,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.math.BigDecimal;
 import java.util.Optional;
 import java.util.function.Function;
 
@@ -20,8 +19,7 @@ import java.util.function.Function;
 @Component
 public class ProductConverter implements Function<ProductDto, Product> {
 
-    private final static Logger logger = LoggerFactory.getLogger(ProductConverter.class);
-    //private final AtomicLong counter = new AtomicLong();
+    private final static Logger LOGGER = LoggerFactory.getLogger(ProductConverter.class);
 
     private ProductsGroupService productsGroupService;
     private SuppliersRepository suppliersRepository;
@@ -34,7 +32,7 @@ public class ProductConverter implements Function<ProductDto, Product> {
 
     @Override
     public Product apply(ProductDto productDto) {
-        logger.info("ProductConverter.apply()");
+        LOGGER.info("ProductConverter.apply()");
 
         ProductGroup productsGroup = productsGroupService.findProductsGroupById(productDto.getProduct_group());
         Optional<Supplier> optionalSupplier = suppliersRepository.findById(productDto.getSupplier());

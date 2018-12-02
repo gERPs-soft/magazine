@@ -15,16 +15,6 @@ public class OrderDtoToOrderOpConverter implements Function<OrderDto, OrderOpera
 
     @Override
     public OrderOperation apply(OrderDto orderDto) {
-
         return new OrderOperation();
     }
 }
-
-    /*
-    private Long sellerId;
-    private Long customerId;
-    private List<OrderItemDto> items;
-    private Long productId;
-    private Integer quantity;
-    private BigDecimal productPrice;
-    */
