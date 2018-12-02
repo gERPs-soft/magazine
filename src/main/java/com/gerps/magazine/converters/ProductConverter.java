@@ -41,7 +41,7 @@ public class ProductConverter implements Function<ProductDto, Product> {
         Supplier supplierObject = optionalSupplier.get();
 
         Product product = new Product();
-        //product.setOrderId(counter.incrementAndGet());
+        product.setId(productDto.getId());
         product.setAssort_index(productDto.getAssort_index());
         product.setName(productDto.getName());
         product.setProduct_group(productsGroup);

@@ -39,22 +39,22 @@ public class ProductsServiceImpl implements ProductsService {
 
     @Override
     public List<ProductDto> findAllProducts() throws EntityNotFoundException {
-        logger.info("find all products()");
 
         Iterable<Product> productList = productsRepository.findAll();
 
         if (productList != null) {
+            logger.info("Find all products()");
             List<ProductDto> productDtoList = new ArrayList<>();
             productList.forEach(product -> productDtoList.add(productDtoConverter.apply(product)));
             return productDtoList;
         } else {
-            logger.error("Products list is empty. Not found any products");
+            logger.info("Products list is empty. Not found any products");
             throw new EntityNotFoundException("Products list is empty. No products found in database. Please try again later.");
         }
     }
 
     @Override
-    public ProductDto findProductById(Long id)  throws EntityNotFoundException {
+    public ProductDto findProductById(Long id) throws EntityNotFoundException {
 
         Optional<Product> optionalProduct = productsRepository.findById(id);
 
@@ -63,8 +63,8 @@ public class ProductsServiceImpl implements ProductsService {
             logger.info("Found product {}", productIsPresent.getName());
             return productDtoConverter.apply(productIsPresent);
         } else {
-            logger.error("Not found product by orderId: {}", id);
-            throw  new EntityNotFoundException("Product with orderId "+id+" was not found in database. Please try again with another orderId.");
+            logger.error("Not found product by id: {}", id);
+            throw new EntityNotFoundException("Product with id " + id + " was not found in database. Please try again with another id.");
         }
     }
 
@@ -75,7 +75,8 @@ public class ProductsServiceImpl implements ProductsService {
     }
 
     @Override
-    public void delete(Product product) {
-
+    public void delete(Long id) {
+        logger.info("Delete product id={}", id);
+        productsRepository.deleteById(id);
     }
 }
