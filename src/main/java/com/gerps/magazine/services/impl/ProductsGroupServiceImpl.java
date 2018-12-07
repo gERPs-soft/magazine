@@ -51,7 +51,7 @@ public class ProductsGroupServiceImpl implements ProductsGroupService {
 
         if (groupOptional.isPresent()) {
             ProductGroup productGroup = groupOptional.get();
-            LOGGER.info("Found products group orderId={} name={}", id, productGroup.getName());
+            LOGGER.info("Found products group {}", productGroup.getName());
             return productGroup;
         } else {
             LOGGER.error("Product group orderId={} not found", id);

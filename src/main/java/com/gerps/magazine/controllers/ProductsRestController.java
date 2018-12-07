@@ -94,10 +94,12 @@ public class ProductsRestController {
         }
     }
 
-    @RequestMapping("/delete/{id}")
-    public ResponseEntity deleteCustomer(@PathVariable Long id) {
+    @DeleteMapping("/{id}")
+    public ResponseEntity deleteProducts(@PathVariable Long id) {
+        LOGGER.info("Delete product id={}", id);
         productsService.delete(id);
-        return new ResponseEntity(HttpStatus.OK);
+        ResponseDetails details = new ResponseDetails(new Date(), "Delete product id=" + id);
+        return new ResponseEntity(details, HttpStatus.OK);
     }
 
     @GetMapping("/all-group")

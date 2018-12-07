@@ -81,7 +81,7 @@ public class SuppliersRestController {
         }
     }
 
-    @RequestMapping("/delete/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity deleteSupplier(@PathVariable Long id) {
         supplierService.deleteById(id);
         return new ResponseEntity(HttpStatus.OK);
