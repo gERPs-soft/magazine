@@ -25,7 +25,7 @@ public class Supplier {
     private String name;
 
     @NotEmpty
-    private Integer nip;
+    private String nip;
 
     private String city;
     private String street;

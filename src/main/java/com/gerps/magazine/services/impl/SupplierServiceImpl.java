@@ -62,11 +62,13 @@ public class SupplierServiceImpl implements SupplierService {
 
     @Override
     public void save(Supplier supplier) {
-
+        LOGGER.info("Save to db supplier {}", supplier.getName());
+        suppliersRepository.save(supplier);
     }
 
     @Override
     public void deleteById(Long id) throws EntityNotFoundException {
-
+        LOGGER.info("Deleted supplier id={}", id);
+        suppliersRepository.deleteById(id);
     }
 }

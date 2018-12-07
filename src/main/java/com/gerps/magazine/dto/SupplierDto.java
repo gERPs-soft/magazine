@@ -14,6 +14,7 @@ public class SupplierDto {
 
     private Long id;
     private String name;
+    private String nip;
     private String city;
     private String street;
     private String street_number;
