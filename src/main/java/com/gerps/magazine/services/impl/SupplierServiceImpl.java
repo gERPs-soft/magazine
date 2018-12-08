@@ -69,6 +69,9 @@ public class SupplierServiceImpl implements SupplierService {
     @Override
     public void deleteById(Long id) throws EntityNotFoundException {
         LOGGER.info("Deleted supplier id={}", id);
-        suppliersRepository.deleteById(id);
+        Supplier supplier = suppliersRepository.findById(id).get();
+        supplier.setActive(false);
+        suppliersRepository.save(supplier);
+//        suppliersRepository.deleteById(id);
     }
 }

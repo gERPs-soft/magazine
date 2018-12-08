@@ -40,4 +40,6 @@ public class Supplier {
     private String representative_person;
     private String bank_supplier_name;
     private String bank_supplier_account_number;
+
+    private boolean active = true;
 }
