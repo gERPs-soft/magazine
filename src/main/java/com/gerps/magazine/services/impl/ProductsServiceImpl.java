@@ -38,12 +38,15 @@ public class ProductsServiceImpl implements ProductsService {
     @Override
     public List<ProductDto> findAllProducts() throws EntityNotFoundException {
 
-        Iterable<Product> products = productsRepository.findAll();
+        //Iterable<Product> products = productsRepository.findAll();
+        Iterable<Product> products = productsRepository.findAllByActiveTrue();
 
         if (products != null) {
-            LOGGER.info("Find all products()");
+            LOGGER.info("Found {} products", ((List<Product>) products).size());
             List<ProductDto> productDtos = new ArrayList<>();
-            products.forEach(product -> productDtos.add(productDtoConverter.apply(product)));
+            products.forEach(product ->
+                    productDtos.add(productDtoConverter.apply(product)));
+
             return productDtos;
         } else {
             LOGGER.info("Products list is empty. Not found any products");
@@ -75,6 +78,8 @@ public class ProductsServiceImpl implements ProductsService {
     @Override
     public void delete(Long id) {
         LOGGER.info("Delete product id={}", id);
-        productsRepository.deleteById(id);
+        Product productToDelete = productsRepository.findById(id).get();
+        productToDelete.setActive(false);
+        productsRepository.save(productToDelete);
     }
 }
