@@ -15,8 +15,6 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 /**
  * Created by Grzesiek on 2018-11-18
@@ -25,7 +23,7 @@ import java.util.stream.StreamSupport;
 @Service
 public class ProductsServiceImpl implements ProductsService {
 
-    private static final Logger logger = LoggerFactory.getLogger(ProductsServiceImpl.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ProductsServiceImpl.class);
     private ProductsRepository productsRepository;
     private ProductDtoConverter productDtoConverter;
     private ProductConverter productConverter;
@@ -39,43 +37,44 @@ public class ProductsServiceImpl implements ProductsService {
 
     @Override
     public List<ProductDto> findAllProducts() throws EntityNotFoundException {
-        logger.info("find all products()");
 
-        Iterable<Product> productList = productsRepository.findAll();
+        Iterable<Product> products = productsRepository.findAll();
 
-        if (productList != null) {
-            List<ProductDto> productDtoList = new ArrayList<>();
-            productList.forEach(product -> productDtoList.add(productDtoConverter.apply(product)));
-            return productDtoList;
+        if (products != null) {
+            LOGGER.info("Find all products()");
+            List<ProductDto> productDtos = new ArrayList<>();
+            products.forEach(product -> productDtos.add(productDtoConverter.apply(product)));
+            return productDtos;
         } else {
-            logger.error("Products list is empty. Not found any products");
+            LOGGER.info("Products list is empty. Not found any products");
             throw new EntityNotFoundException("Products list is empty. No products found in database. Please try again later.");
         }
     }
 
     @Override
-    public ProductDto findProductById(Long id)  throws EntityNotFoundException {
+    public ProductDto findProductById(Long id) throws EntityNotFoundException {
 
         Optional<Product> optionalProduct = productsRepository.findById(id);
 
         if (optionalProduct.isPresent()) {
             Product productIsPresent = optionalProduct.get();
-            logger.info("Found product {}", productIsPresent.getName());
+            LOGGER.info("Found product {}", productIsPresent.getName());
             return productDtoConverter.apply(productIsPresent);
         } else {
-            logger.error("Not found product by orderId: {}", id);
-            throw  new EntityNotFoundException("Product with orderId "+id+" was not found in database. Please try again with another orderId.");
+            LOGGER.info("Not found product by id: {}", id);
+            throw new EntityNotFoundException("Product with id " + id + " was not found in database. Please try again with another id.");
         }
     }
 
     @Override
     public void save(Product product) {
-        logger.info("Save to db product with name={}", product.getName());
+        LOGGER.info("Save to db product with name={}", product.getName());
         productsRepository.save(product);
     }
 
     @Override
-    public void delete(Product product) {
-
+    public void delete(Long id) {
+        LOGGER.info("Delete product id={}", id);
+        productsRepository.deleteById(id);
     }
 }

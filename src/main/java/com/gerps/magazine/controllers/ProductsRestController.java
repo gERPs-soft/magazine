@@ -4,7 +4,7 @@ import com.gerps.magazine.converters.ProductConverter;
 import com.gerps.magazine.dto.ProductDto;
 import com.gerps.magazine.entity.Product;
 import com.gerps.magazine.entity.ProductGroup;
-import com.gerps.magazine.dto.MyResponseDetails;
+import com.gerps.magazine.dto.ResponseDetails;
 import com.gerps.magazine.exceptions.EntityNotFoundException;
 import com.gerps.magazine.services.ProductsGroupService;
 import com.gerps.magazine.services.ProductsService;
@@ -28,7 +28,7 @@ import java.util.Locale;
 @CrossOrigin(origins = "http://localhost:4200")
 public class ProductsRestController {
 
-    private static final Logger logger = LoggerFactory.getLogger(ProductsRestController.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ProductsRestController.class);
 
     private ProductsService productsService;
     private ProductConverter productConverter;
@@ -41,16 +41,15 @@ public class ProductsRestController {
         this.productsGroupService = productsGroupService;
     }
 
-
     @GetMapping("/all")
     public List<ProductDto> findAllProducts() {
-        logger.info("Rest findAllProducts()");
+        LOGGER.info("Rest findAllProducts()");
         return productsService.findAllProducts();
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<ProductDto> findProductById(@PathVariable Long id) {
-        logger.info("Rest findProductById={}", id);
+        LOGGER.info("Rest findProductById={}", id);
 
         try {
             ProductDto productDto = productsService.findProductById(id);
@@ -61,47 +60,59 @@ public class ProductsRestController {
         return new ResponseEntity<>(HttpStatus.valueOf("Can't find product with id " + id));
     }
 
-    @PostMapping(value = "/add/new", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    private ResponseEntity addProduct(@RequestBody ProductDto productDto) {
-        logger.info("Try add new product {}", productDto.getName());
+    @PostMapping(value = "/save", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity addProduct(@RequestBody ProductDto productDto) {
 
-        ResponseEntity responseEntity;
+        ResponseDetails details;
+        Long productId = productDto.getId();
 
         if (productDto != null) {
-            logger.info("productDto is not empty, save new product {}", productDto.getName());
-            Product product = productConverter.apply(productDto);
-            productsService.save(product);
 
-            MyResponseDetails details = new MyResponseDetails(new Date(), "Product " + productDto.getName() + " add to db.");
+            if (productId == null) {
+                LOGGER.info("productDto is not empty, save new product {}", productDto.getName());
+                details = new ResponseDetails(new Date(), "Product " + productDto.getName() + " add to db.");
+                Product product = productConverter.apply(productDto);
+                productsService.save(product);
+
+            } else if (productsService.findProductById(productId) != null) {
+                LOGGER.info("Edit product id={}", productId);
+                details = new ResponseDetails(new Date(), "Product id=" + productId + " edit in db.");
+
+                Product product = productConverter.apply(productDto);
+                productsService.save(product);
+            } else {
+                LOGGER.error("Product id={} not found in db!", productId);
+                details = new ResponseDetails(new Date(), "Product " + productId + " is not found in db. Please try with another id.");
+            }
             return new ResponseEntity(details, HttpStatus.CREATED);
+
         } else {
-            logger.error("RequestBody is empty");
-            MyResponseDetails details = new MyResponseDetails(new Date(), "Body is empty");
+            LOGGER.error("RequestBody is empty");
+
+            details = new ResponseDetails(new Date(), "Body is empty");
             return new ResponseEntity(details, HttpStatus.BAD_REQUEST);
         }
-
     }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity deleteProducts(@PathVariable Long id) {
+        LOGGER.info("Delete product id={}", id);
+        productsService.delete(id);
+        ResponseDetails details = new ResponseDetails(new Date(), "Delete product id=" + id);
+        return new ResponseEntity(details, HttpStatus.OK);
+    }
 
-    //@todo implements controller to edit products
-    /*@PostMapping("/products/{orderId}")
-    public void editProductById(@PathVariable Long orderId) {
-
-    }*/
-
-
-    @GetMapping("/products/all-group")
+    @GetMapping("/all-group")
     public List<ProductGroup> findAllProductsGroup() {
-        logger.info("Rest findAllProductsGroup()");
+        LOGGER.info("Rest findAllProductsGroup()");
         return productsGroupService.findAllProductsGroup();
     }
-
 
     //metodka testowa wysylajaca POSTem JSONA z nowy produktem
     @GetMapping("/addNewExamplesProduct")
     @CrossOrigin(origins = "http://localhost:8080")
     public void addNewExampleProduct() {
-        logger.info("addNewExampleProduct()");
+        LOGGER.info("addNewExampleProduct()");
 
         String jsonToSent = "{" +
                 "    \"assort_index\": \"1.07.002\",\n" +

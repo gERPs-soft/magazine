@@ -9,11 +9,11 @@ import java.util.Date;
  */
 
 @Data
-public class MyResponseDetails {
+public class ResponseDetails {
     private Date timestamp;
     private String message;
 
-    public MyResponseDetails(Date timestamp, String message) {
+    public ResponseDetails(Date timestamp, String message) {
         super();
         this.timestamp = timestamp;
         this.message = message;

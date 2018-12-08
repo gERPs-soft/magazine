@@ -20,7 +20,7 @@ import java.util.Optional;
 @Service
 public class ProductsGroupServiceImpl implements ProductsGroupService {
 
-    private static final Logger logger = LoggerFactory.getLogger(ProductsGroupServiceImpl.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ProductsGroupServiceImpl.class);
     private ProductsGroupRepository productsGroupRepository;
 
     @Autowired
@@ -31,15 +31,15 @@ public class ProductsGroupServiceImpl implements ProductsGroupService {
     @Override
     public List<ProductGroup> findAllProductsGroup() throws EntityNotFoundException {
 
-        Iterable<ProductGroup> productGroupsIterable = productsGroupRepository.findAll();
+        Iterable<ProductGroup> productsGroups = productsGroupRepository.findAll();
 
-        if(productGroupsIterable!=null){
+        if (productsGroups != null) {
             List<ProductGroup> productsGroupList = new ArrayList<>();
-            productGroupsIterable.forEach(pg -> productsGroupList.add(pg));
-            logger.info("Found {} products group.", productsGroupList.size());
+            productsGroups.forEach(pg -> productsGroupList.add(pg));
+            LOGGER.info("Found {} products group.", productsGroupList.size());
             return productsGroupList;
-        }else {
-            logger.error("Product group list is empty. Not found any product group");
+        } else {
+            LOGGER.error("Product group list is empty. Not found any product group");
             throw new EntityNotFoundException("Product group not found in database. Please try again later.");
         }
     }
@@ -51,11 +51,11 @@ public class ProductsGroupServiceImpl implements ProductsGroupService {
 
         if (groupOptional.isPresent()) {
             ProductGroup productGroup = groupOptional.get();
-            logger.info("Found products group orderId={} name={}", id, productGroup.getName());
+            LOGGER.info("Found products group {}", productGroup.getName());
             return productGroup;
-        }else{
-            logger.error("Product group orderId={} not found", id);
-            throw new EntityNotFoundException("Product group by orderId="+id+" not found in database. Please try again later.");
+        } else {
+            LOGGER.error("Product group orderId={} not found", id);
+            throw new EntityNotFoundException("Product group by orderId=" + id + " not found in database. Please try again later.");
         }
     }
 }

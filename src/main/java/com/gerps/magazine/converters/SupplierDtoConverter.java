@@ -14,9 +14,9 @@ import java.util.function.Function;
 public class SupplierDtoConverter implements Function<Supplier, SupplierDto> {
 
     @Override
-    public SupplierDto apply(Supplier s) {
+    public SupplierDto apply(Supplier supplier) {
 
-        return new SupplierDto(s.getId(), s.getName(), s.getCity(), s.getStreet(), s.getStreet_number(), s.getPost_code(), s.getPhone_number(), s.getEmail(),
-                s.getWww(), s.getRepresentative_person(), s.getBank_supplier_name(), s.getBank_supplier_account_number());
+        return new SupplierDto(supplier.getId(), supplier.getName(), supplier.getNip(), supplier.getCity(), supplier.getStreet(), supplier.getStreet_number(), supplier.getPost_code(), supplier.getPhone_number(), supplier.getEmail(),
+                supplier.getWww(), supplier.getRepresentative_person(), supplier.getBank_supplier_name(), supplier.getBank_supplier_account_number());
     }
 }

@@ -25,7 +25,7 @@ public class Supplier {
     private String name;
 
     @NotEmpty
-    private Integer nip;
+    private String nip;
 
     private String city;
     private String street;
@@ -40,4 +40,6 @@ public class Supplier {
     private String representative_person;
     private String bank_supplier_name;
     private String bank_supplier_account_number;
+
+    private boolean active = true;
 }

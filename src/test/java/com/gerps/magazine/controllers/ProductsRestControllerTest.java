@@ -50,7 +50,7 @@ public class ProductsRestControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
-   @MockBean
+    @MockBean
     private ProductDtoConverter productDtoConverter;
 
     @MockBean

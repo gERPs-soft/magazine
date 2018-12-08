@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.CrossOrigin;
  * Created by Grzesiek on 2018-11-18
  */
 
-//@Repository()
-@RepositoryRestResource
+@Repository()
+//@RepositoryRestResource
 @CrossOrigin(origins = "http://localhost:4200")
 public interface SuppliersRepository extends CrudRepository<Supplier, Long> {
 }
