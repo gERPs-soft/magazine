@@ -36,16 +36,20 @@ public class SupplierServiceImpl implements SupplierService {
     public List<SupplierDto> findAllSuppliers() throws EntityNotFoundException {
         LOGGER.info("findAllSuppliers()");
 
-        Iterable<Supplier> supplierIterable = suppliersRepository.findAll();
+        //Iterable<Supplier> supplierIterable = suppliersRepository.findAll();
+        Iterable<Supplier> supplierIterable = suppliersRepository.findAllByActiveTrue();
 
-        if(supplierIterable!=null){
+        if (!((List<Supplier>) supplierIterable).isEmpty()) {
             List<SupplierDto> supplierDtoList = new ArrayList<>();
-            supplierIterable.forEach(supplier -> supplierDtoList.add(supplierDtoConverter.apply(supplier)));
+            supplierIterable.forEach(supplier ->
+                    supplierDtoList.add(supplierDtoConverter.apply(supplier)));
+
             return supplierDtoList;
-        }else {
+        } else {
             LOGGER.error("Suppliers list is empty. Not found any suppliers");
             throw new EntityNotFoundException("Suppliers list is empty. No suppliers found in database. Please try again later.");
         }
+
     }
 
     @Override
@@ -56,7 +60,7 @@ public class SupplierServiceImpl implements SupplierService {
         if (optionalSupplier.isPresent()) {
             return supplierDtoConverter.apply(optionalSupplier.get());
         } else {
-            throw new EntityNotFoundException("Supplier with orderId="+id+" was not found in database. Please try again with another orderId");
+            throw new EntityNotFoundException("Supplier with orderId=" + id + " was not found in database. Please try again with another orderId");
         }
     }
 
@@ -72,6 +76,7 @@ public class SupplierServiceImpl implements SupplierService {
         Supplier supplier = suppliersRepository.findById(id).get();
         supplier.setActive(false);
         suppliersRepository.save(supplier);
-//        suppliersRepository.deleteById(id);
     }
 }
+
+//@todo poczytaj o tranzakcyjnosci i poziomach izolacji tranzakcji

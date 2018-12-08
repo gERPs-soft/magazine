@@ -59,12 +59,9 @@ public class Product {
     @Enumerated(EnumType.STRING)
     private Vat vat;
 
-    /*//created only to tests
-    public Product(String name) {
-        this.name = name;
-    }*/
+    private boolean active = true;
 
-    public Product(String assort_index, String name, ProductGroup product_group, UnitOfMasure unitOfMasure, String barcode, Double weight_unit, PackageUnit packageUnit, Integer number_in_package, Integer height, Integer weight, Integer length, Integer number_in_pallet, Supplier supplier, Integer stock, BigDecimal price, Vat vat) {
+    public Product(String assort_index, String name, ProductGroup product_group, UnitOfMasure unitOfMasure, String barcode, Double weight_unit, PackageUnit packageUnit, Integer number_in_package, Integer height, Integer weight, Integer length, Integer number_in_pallet, Supplier supplier, Integer stock, BigDecimal price, Vat vat, boolean active) {
         this.assort_index = assort_index;
         this.name = name;
         this.product_group = product_group;
@@ -81,5 +78,6 @@ public class Product {
         this.stock = stock;
         this.price = price;
         this.vat = vat;
+        this.active = active;
     }
 }

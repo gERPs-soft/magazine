@@ -80,7 +80,7 @@ public class OrderOperationServiceImpl implements OrderOperationService {
     }
 
     public boolean checkOrderItemsInStock(List<OrderOperation> orderOperations) {
-        LOGGER.info("Check if all products from the order {} are in stock", orderOperations.get(1).getOrderNumber());
+        LOGGER.info("Check if all products from the order {} are in stock", orderOperations.get(0).getOrderNumber());
 
         boolean allInStock = false;
 
