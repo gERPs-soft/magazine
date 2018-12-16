@@ -4,13 +4,15 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
+
 /**
  * Created by Grzesiek on 2018-11-18
  */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class SupplierDto {
+public class SupplierDto implements Serializable {
 
     private Long id;
     private String name;

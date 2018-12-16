@@ -9,6 +9,7 @@ import com.gerps.magazine.services.SupplierService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -33,9 +34,8 @@ public class SupplierServiceImpl implements SupplierService {
     }
 
     @Override
+    @Cacheable(value = "SuppliersCache")
     public List<SupplierDto> findAllSuppliers() throws EntityNotFoundException {
-        LOGGER.info("findAllSuppliers()");
-
         //Iterable<Supplier> supplierIterable = suppliersRepository.findAll();
         Iterable<Supplier> supplierIterable = suppliersRepository.findAllByActiveTrue();
 
@@ -44,20 +44,22 @@ public class SupplierServiceImpl implements SupplierService {
             supplierIterable.forEach(supplier ->
                     supplierDtoList.add(supplierDtoConverter.apply(supplier)));
 
+            LOGGER.info("Found {} suppliers in Db", supplierDtoList.size());
             return supplierDtoList;
         } else {
-            LOGGER.error("Suppliers list is empty. Not found any suppliers");
+            LOGGER.info("Suppliers list is empty. Not found any suppliers");
             throw new EntityNotFoundException("Suppliers list is empty. No suppliers found in database. Please try again later.");
         }
-
     }
 
     @Override
+    @Cacheable(value = "SuppliersCache")
     public SupplierDto findSupplierById(Long id) throws EntityNotFoundException {
-        LOGGER.info("findSupplierById={}", id);
+
         Optional<Supplier> optionalSupplier = suppliersRepository.findById(id);
 
         if (optionalSupplier.isPresent()) {
+            LOGGER.info("findSupplierById={} in Db", id);
             return supplierDtoConverter.apply(optionalSupplier.get());
         } else {
             throw new EntityNotFoundException("Supplier with orderId=" + id + " was not found in database. Please try again with another orderId");
@@ -72,8 +74,8 @@ public class SupplierServiceImpl implements SupplierService {
 
     @Override
     public void deleteById(Long id) throws EntityNotFoundException {
-        LOGGER.info("Deleted supplier id={}", id);
         Supplier supplier = suppliersRepository.findById(id).get();
+        LOGGER.info("Deleted supplier id={} name={}", id, supplier.getName());
         supplier.setActive(false);
         suppliersRepository.save(supplier);
     }

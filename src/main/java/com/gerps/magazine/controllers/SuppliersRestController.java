@@ -44,7 +44,7 @@ public class SuppliersRestController {
 
     @GetMapping("/{id}")
     public SupplierDto findSupplierById(@PathVariable Long id) {
-        LOGGER.info("findSupplierById={}", id);
+        LOGGER.info("Rest findSupplierById={}", id);
 
         return supplierService.findSupplierById(id);
     }

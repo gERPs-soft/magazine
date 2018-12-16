@@ -15,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -41,32 +42,23 @@ public class OrdersOperationsController {
         this.orderOperationService = orderOperationService;
     }
 
-    @PostMapping(value = "/add-order"  /*, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE*/)
+    @PostMapping(value = "/add-order")
     private ResponseEntity<OrderStatusDetails> addNewOrder(@RequestBody OrderDto orderDto) {
 
-        LOGGER.info("Add new order from customer {} with {} items.", orderDto.getCustomerId(), orderDto.getItems().size());
+        if (orderOperationService.findAllOperationsByOrderId(orderDto.getOrderId()).isEmpty()) {
+            LOGGER.info("Add new order from customer {} with {} items.", orderDto.getCustomerId(), orderDto.getItems().size());
 
-        List<OrderOperation> operationList = orderItemsToOrderOperationsList(orderDto);
+            List<OrderOperation> operationList = orderItemsToOrderOperationsList(orderDto);
 
-        /*orderItems.forEach(orderItemDto -> {
-            OrderOperation operation = new OrderOperation();
-            operation.setOrderNumber(orderDto.getOrderId());
-            operation.setOrderDate(LocalDateTime.now());
-            operation.setProductId(orderItemDto.getProductId());
-            operation.setQuantity(orderItemDto.getQuantity());
-            operation.setSellerId(orderDto.getSellerId());
-            operation.setCustomerId(orderDto.getCustomerId());
-            operation.setProductPrice(orderItemDto.getProductPrice());
-            operation.setShippingOrderDate(LocalDateTime.now());
-            operation.setOrderStatus(OrderStatus.CONFIRMED);
-            operationList.add(operation);
-        });*/
+            orderOperationService.saveOperation(operationList);
+            OrderStatusDetails orderStatusDetails = orderOperationService.confirmOrder(operationList);
 
-        orderOperationService.saveOperation(operationList);
+            return new ResponseEntity(orderStatusDetails, HttpStatus.CREATED);
+        } else {
+            LOGGER.info("Order {} is already exists in databases", orderDto.getOrderId());
 
-        OrderStatusDetails orderStatusDetails = orderOperationService.confirmOrder(operationList);
-
-        return new ResponseEntity(orderStatusDetails, HttpStatus.CREATED);
+            return new ResponseEntity("Order " + orderDto.getOrderId() + " is already exists in databases", HttpStatus.BAD_REQUEST);
+        }
 
         //@todo dodaj sprawdzanie czy zamówienie o przesyłanym id już istnieje
     }
@@ -88,7 +80,7 @@ public class OrdersOperationsController {
         }
     }
 
-    private List<OrderOperation> orderItemsToOrderOperationsList(OrderDto orderDto){
+    private List<OrderOperation> orderItemsToOrderOperationsList(OrderDto orderDto) {
         List<OrderOperation> orderItemsToConvert = new ArrayList<>();
         List<OrderItemDto> orderItems = orderDto.getItems();
 
