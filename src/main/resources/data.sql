@@ -18,4 +18,4 @@ VALUES
 (1, '1.02.003', 'Reczniki PREMIUM 4000 biale', 2, 'szt', '112200445511', 8.2, 'Karton', 1, 50, 40, 60, 32, 1, 320, 49.00, 'VAT_23', true),
 (2, '1.07.001', 'Papier PROFIT Flesz 18 2w bialy', 1, 'szt', '112200444412', 6.0, 'Folia', 12, 20, 40, 60, 720, 2, 2400, 2.50, 'VAT_23', true),
 (3, '1.07.002', 'Papier PERFECT Flesz 18 2w celuloza', 1, 'szt', '112200444413', 6.0, 'Folia', 12, 20, 40, 60, 720, 2, 3600, 3.40, 'VAT_23', true),
-(4, '1.02.007', 'Reczniki PREMIUM 4000 szare', 2, 'szt', '112200444512', 8, 'Karton', 1, 50, 40, 60, 32, 2, 2400, 2.50, 'VAT_23', true);
+(4, '1.02.007', 'Reczniki PREMIUM 4000 szare', 2, 'szt', '112200444512', 8, 'Karton', 1, 50, 40, 60, 32, 2, 2400, 36, 'VAT_23', true);

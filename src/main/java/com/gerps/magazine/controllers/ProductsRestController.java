@@ -45,13 +45,13 @@ public class ProductsRestController {
 
     @GetMapping("/all")
     public List<ProductDto> findAllProducts() {
-        LOGGER.info("Rest findAllProducts()");
+        LOGGER.info("Rest controller findAllProducts()");
         return productsService.findAllProducts();
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<ProductDto> findProductById(@PathVariable Long id) {
-        LOGGER.info("Rest findProductById={}", id);
+        LOGGER.info("Rest controller findProductById={}", id);
 
         try {
             ProductDto productDto = productsService.findProductById(id);
@@ -106,7 +106,7 @@ public class ProductsRestController {
 
     @GetMapping("/products-group")
     public List<ProductGroup> findAllProductsGroup() {
-        LOGGER.info("Rest findAllProductsGroup()");
+        LOGGER.info("Rest controller findAllProductsGroup()");
         return productsGroupService.findAllProductsGroup();
     }
 
