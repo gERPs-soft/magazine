@@ -37,14 +37,14 @@ public class SuppliersRestController {
 
     @GetMapping("/all")
     public List<SupplierDto> findAllSuppliers() {
-        LOGGER.info("Rest findAllSuppliers()");
+        LOGGER.info("Rest controller findAllSuppliers()");
 
         return supplierService.findAllSuppliers();
     }
 
     @GetMapping("/{id}")
     public SupplierDto findSupplierById(@PathVariable Long id) {
-        LOGGER.info("findSupplierById={}", id);
+        LOGGER.info("Rest controller findSupplierById={}", id);
 
         return supplierService.findSupplierById(id);
     }

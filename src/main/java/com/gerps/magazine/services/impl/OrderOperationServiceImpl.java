@@ -6,6 +6,7 @@ import com.gerps.magazine.entity.OrderStatus;
 import com.gerps.magazine.repository.OrderOperationsRepository;
 import com.gerps.magazine.services.OrderOperationService;
 import com.gerps.magazine.services.ProductsService;
+import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -71,7 +72,7 @@ public class OrderOperationServiceImpl implements OrderOperationService {
     }
 
     public void modifyDeliveryTimeInOrder(Long orderId, LocalDateTime modifyDeliveryTime) {
-        LOGGER.info("Modify/set delivery time in order number {} and save to db.", orderId);
+        LOGGER.info("Modify/set delivery time in order {} and save to db.", orderId);
 
         List<OrderOperation> operationList = findAllOperationsByOrderId(orderId);
         operationList.forEach(orderOperation -> orderOperation.setShippingOrderDate(modifyDeliveryTime));

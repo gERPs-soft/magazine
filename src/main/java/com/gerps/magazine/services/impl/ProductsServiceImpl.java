@@ -7,9 +7,11 @@ import com.gerps.magazine.entity.Product;
 import com.gerps.magazine.exceptions.EntityNotFoundException;
 import com.gerps.magazine.repository.ProductsRepository;
 import com.gerps.magazine.services.ProductsService;
+import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -36,13 +38,14 @@ public class ProductsServiceImpl implements ProductsService {
     }
 
     @Override
+    @Cacheable(value = "ProdCache")
     public List<ProductDto> findAllProducts() throws EntityNotFoundException {
 
         //Iterable<Product> products = productsRepository.findAll();
         Iterable<Product> products = productsRepository.findAllByActiveTrue();
 
         if (products != null) {
-            LOGGER.info("Found {} products", ((List<Product>) products).size());
+            LOGGER.info("Found {} products in DB", ((List<Product>) products).size());
             List<ProductDto> productDtos = new ArrayList<>();
             products.forEach(product ->
                     productDtos.add(productDtoConverter.apply(product)));
@@ -55,13 +58,14 @@ public class ProductsServiceImpl implements ProductsService {
     }
 
     @Override
+    @Cacheable(value = "ProdCache")
     public ProductDto findProductById(Long id) throws EntityNotFoundException {
 
         Optional<Product> optionalProduct = productsRepository.findById(id);
 
         if (optionalProduct.isPresent()) {
             Product productIsPresent = optionalProduct.get();
-            LOGGER.info("Found product {}", productIsPresent.getName());
+            LOGGER.info("Found product {} in DB", productIsPresent.getName());
             return productDtoConverter.apply(productIsPresent);
         } else {
             LOGGER.info("Not found product by id: {}", id);

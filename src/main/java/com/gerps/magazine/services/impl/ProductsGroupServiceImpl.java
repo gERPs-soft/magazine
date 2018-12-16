@@ -4,9 +4,11 @@ import com.gerps.magazine.entity.ProductGroup;
 import com.gerps.magazine.exceptions.EntityNotFoundException;
 import com.gerps.magazine.repository.ProductsGroupRepository;
 import com.gerps.magazine.services.ProductsGroupService;
+import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -29,6 +31,7 @@ public class ProductsGroupServiceImpl implements ProductsGroupService {
     }
 
     @Override
+    @Cacheable(value = "GroupsCache")
     public List<ProductGroup> findAllProductsGroup() throws EntityNotFoundException {
 
         Iterable<ProductGroup> productsGroups = productsGroupRepository.findAll();
@@ -36,7 +39,7 @@ public class ProductsGroupServiceImpl implements ProductsGroupService {
         if (productsGroups != null) {
             List<ProductGroup> productsGroupList = new ArrayList<>();
             productsGroups.forEach(pg -> productsGroupList.add(pg));
-            LOGGER.info("Found {} products group.", productsGroupList.size());
+            LOGGER.info("Found {} products group in Db", productsGroupList.size());
             return productsGroupList;
         } else {
             LOGGER.error("Product group list is empty. Not found any product group");

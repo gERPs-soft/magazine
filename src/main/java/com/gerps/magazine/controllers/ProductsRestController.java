@@ -11,10 +11,12 @@ import com.gerps.magazine.services.ProductsService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -43,13 +45,13 @@ public class ProductsRestController {
 
     @GetMapping("/all")
     public List<ProductDto> findAllProducts() {
-        LOGGER.info("Rest findAllProducts()");
+        LOGGER.info("Rest controller findAllProducts()");
         return productsService.findAllProducts();
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<ProductDto> findProductById(@PathVariable Long id) {
-        LOGGER.info("Rest findProductById={}", id);
+        LOGGER.info("Rest controller findProductById={}", id);
 
         try {
             ProductDto productDto = productsService.findProductById(id);
@@ -102,9 +104,9 @@ public class ProductsRestController {
         return new ResponseEntity(details, HttpStatus.OK);
     }
 
-    @GetMapping("/all-group")
+    @GetMapping("/products-group")
     public List<ProductGroup> findAllProductsGroup() {
-        LOGGER.info("Rest findAllProductsGroup()");
+        LOGGER.info("Rest controller findAllProductsGroup()");
         return productsGroupService.findAllProductsGroup();
     }
 
