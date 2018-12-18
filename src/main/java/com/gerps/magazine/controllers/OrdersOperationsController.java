@@ -1,7 +1,6 @@
 package com.gerps.magazine.controllers;
 
 import com.gerps.magazine.dto.OrderDto;
-import com.gerps.magazine.dto.OrderItemDto;
 import com.gerps.magazine.dto.OrderStatusDetails;
 import com.gerps.magazine.entity.OrderOperation;
 import com.gerps.magazine.entity.OrderStatus;
@@ -15,9 +14,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
-
-import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -25,7 +21,7 @@ import java.util.List;
  */
 
 @RestController
-@RequestMapping("magazine/orders")
+@RequestMapping("/magazine/orders")
 @CrossOrigin(origins = "http://localhost:4200")
 public class OrdersOperationsController {
 
@@ -48,7 +44,7 @@ public class OrdersOperationsController {
         if (orderOperationService.findAllOperationsByOrderId(orderDto.getOrderId()).isEmpty()) {
             LOGGER.info("Add new order from customer {} with {} items.", orderDto.getCustomerId(), orderDto.getItems().size());
 
-            List<OrderOperation> operationList = orderItemsToOrderOperationsList(orderDto);
+            List<OrderOperation> operationList = orderOperationService.orderItemsToOrderOperationsList(orderDto);
 
             orderOperationService.saveOperation(operationList);
             OrderStatusDetails orderStatusDetails = orderOperationService.confirmOrder(operationList);
@@ -56,47 +52,36 @@ public class OrdersOperationsController {
             return new ResponseEntity(orderStatusDetails, HttpStatus.CREATED);
         } else {
             LOGGER.info("Order {} is already exists in databases", orderDto.getOrderId());
-
             return new ResponseEntity("Order " + orderDto.getOrderId() + " is already exists in databases", HttpStatus.BAD_REQUEST);
         }
-
-        //@todo dodaj sprawdzanie czy zamówienie o przesyłanym id już istnieje
     }
 
-    @PostMapping("/change-status-order")
-    public ResponseEntity changeStatusOrder(@RequestParam Long orderId, OrderStatus changedStatus) {
+    @PostMapping(value = "/change-status-order")
+    public ResponseEntity changeStatusInOrder(@RequestParam Long orderId, OrderStatus changedStatus) {
 
         RestTemplate restTemplate = new RestTemplate();
         List<OrderOperation> orderOperToChangeStatus = orderOperationService.findAllOperationsByOrderId(orderId);
-        OrderStatusDetails orderStatusDetails = new OrderStatusDetails(orderId, orderOperToChangeStatus.get(1).getShippingOrderDate(), "", changedStatus);
-        ResponseEntity responseEntity = restTemplate.postForEntity(orderUrlServer + "/order/update_status", orderStatusDetails, ResponseEntity.class);
+        OrderStatusDetails orderStatusDetailsPastChange = new OrderStatusDetails(orderId, orderOperToChangeStatus.get(1).getShippingOrderDate(), "", changedStatus);
+        ResponseEntity responseEntity = restTemplate.postForEntity(orderUrlServer + "/order/update_status", orderStatusDetailsPastChange, ResponseEntity.class);
 
         if (responseEntity.getStatusCode().is2xxSuccessful()) {
             orderOperToChangeStatus.forEach(orderOperation -> orderOperation.setOrderStatus(changedStatus));
             orderOperationService.saveOperation(orderOperToChangeStatus);
+            LOGGER.info("Order id={} status changed to {}", orderId, changedStatus);
             return new ResponseEntity(null, HttpStatus.CREATED);
         } else {
+            LOGGER.warn("Status order id={} could not be changed", orderId);
             return new ResponseEntity(HttpStatus.BAD_REQUEST);
         }
     }
 
-    private List<OrderOperation> orderItemsToOrderOperationsList(OrderDto orderDto) {
-        List<OrderOperation> orderItemsToConvert = new ArrayList<>();
-        List<OrderItemDto> orderItems = orderDto.getItems();
+    @RequestMapping(value = "/change-status")
+    public ResponseEntity changeStatusOrderInMagazine(@RequestBody OrderStatusDetails orderStatusDetails){
 
-        orderItems.forEach(orderItemDto -> {
-            OrderOperation operation = new OrderOperation();
-            operation.setOrderNumber(orderDto.getOrderId());
-            operation.setOrderDate(LocalDateTime.now());
-            operation.setProductId(orderItemDto.getProductId());
-            operation.setQuantity(orderItemDto.getQuantity());
-            operation.setSellerId(orderDto.getSellerId());
-            operation.setCustomerId(orderDto.getCustomerId());
-            operation.setProductPrice(orderItemDto.getProductPrice());
-            operation.setShippingOrderDate(LocalDateTime.now());
-            operation.setOrderStatus(OrderStatus.CONFIRMED);
-            orderItemsToConvert.add(operation);
-        });
-        return orderItemsToConvert;
+        List<OrderOperation> orderOperToChangeStatus = orderOperationService.findAllOperationsByOrderId(orderStatusDetails.getOrderId());
+        orderOperToChangeStatus.forEach(orderOperation -> orderOperation.setOrderStatus(orderStatusDetails.getOrderStatus()));
+        orderOperationService.saveOperation(orderOperToChangeStatus);
+
+        return new ResponseEntity(orderStatusDetails, HttpStatus.CREATED);
     }
 }

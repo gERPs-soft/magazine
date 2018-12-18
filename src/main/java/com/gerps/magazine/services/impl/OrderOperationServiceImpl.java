@@ -1,5 +1,7 @@
 package com.gerps.magazine.services.impl;
 
+import com.gerps.magazine.dto.OrderDto;
+import com.gerps.magazine.dto.OrderItemDto;
 import com.gerps.magazine.dto.OrderStatusDetails;
 import com.gerps.magazine.entity.OrderOperation;
 import com.gerps.magazine.entity.OrderStatus;
@@ -13,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -96,6 +99,26 @@ public class OrderOperationServiceImpl implements OrderOperationService {
             }
         }
         return allInStock;
+    }
+
+    public List<OrderOperation> orderItemsToOrderOperationsList(OrderDto orderDto) {
+        List<OrderOperation> orderItemsToConvert = new ArrayList<>();
+        List<OrderItemDto> orderItems = orderDto.getItems();
+
+        orderItems.forEach(orderItemDto -> {
+            OrderOperation operation = new OrderOperation();
+            operation.setOrderNumber(orderDto.getOrderId());
+            operation.setOrderDate(LocalDateTime.now());
+            operation.setProductId(orderItemDto.getProductId());
+            operation.setQuantity(orderItemDto.getQuantity());
+            operation.setSellerId(orderDto.getSellerId());
+            operation.setCustomerId(orderDto.getCustomerId());
+            operation.setProductPrice(orderItemDto.getProductPrice());
+            operation.setShippingOrderDate(LocalDateTime.now());
+            operation.setOrderStatus(OrderStatus.CONFIRMED);
+            orderItemsToConvert.add(operation);
+        });
+        return orderItemsToConvert;
     }
 
 }
