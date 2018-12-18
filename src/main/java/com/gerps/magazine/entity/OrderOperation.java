@@ -29,5 +29,7 @@ public class OrderOperation {
     private Long customerId;
     private BigDecimal productPrice;
     private LocalDateTime shippingOrderDate;
+
+    @Enumerated(EnumType.STRING)
     private OrderStatus orderStatus;
 }

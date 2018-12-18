@@ -1,5 +1,6 @@
 package com.gerps.magazine.services;
 
+import com.gerps.magazine.dto.OrderDto;
 import com.gerps.magazine.dto.OrderItemDto;
 import com.gerps.magazine.dto.OrderStatusDetails;
 import com.gerps.magazine.entity.OrderOperation;
@@ -21,5 +22,5 @@ public interface OrderOperationService {
 
     OrderStatusDetails confirmOrder(List<OrderOperation> orderItems);
 
-    //void changeStatusOrderOp(Long orderId, OrderStatus changedStatus);
+    List<OrderOperation> orderItemsToOrderOperationsList(OrderDto orderDto);
 }
