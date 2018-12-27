@@ -51,15 +51,14 @@ public class ProductsRestController {
 
     @GetMapping("/{id}")
     public ResponseEntity<ProductDto> findProductById(@PathVariable Long id) {
-        LOGGER.info("Rest controller findProductById={}", id);
 
         try {
-            ProductDto productDto = productsService.findProductById(id);
-            return new ResponseEntity<>(productDto, HttpStatus.OK);
+            LOGGER.info("Rest controller findProductById={}", id);
+            return new ResponseEntity<>(productsService.findProductById(id), HttpStatus.OK);
         } catch (EntityNotFoundException e) {
             e.printStackTrace();
         }
-        return new ResponseEntity<>(HttpStatus.valueOf("Can't find product with id " + id));
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND); //valueOf("Can't find product with id " + id));
     }
 
     @PostMapping(value = "/save", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)

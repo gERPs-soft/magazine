@@ -4,6 +4,7 @@ import com.gerps.magazine.converters.SupplierDtoConverter;
 import com.gerps.magazine.dto.ResponseDetails;
 import com.gerps.magazine.dto.SupplierDto;
 import com.gerps.magazine.entity.Supplier;
+import com.gerps.magazine.exceptions.EntityNotFoundException;
 import com.gerps.magazine.services.SupplierService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,10 +44,15 @@ public class SuppliersRestController {
     }
 
     @GetMapping("/{id}")
-    public SupplierDto findSupplierById(@PathVariable Long id) {
-        LOGGER.info("Rest controller findSupplierById={}", id);
+    public ResponseEntity<SupplierDto> findSupplierById(@PathVariable Long id) {
 
-        return supplierService.findSupplierById(id);
+        try {
+            LOGGER.info("Rest controller findSupplierById={}", id);
+            return new ResponseEntity<>(supplierService.findSupplierById(id), HttpStatus.OK);
+        } catch (EntityNotFoundException e) {
+            e.printStackTrace();
+        }
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);//valueOf("Can't find supplier with id " + id));
     }
 
     @PostMapping(value = "/save", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -55,7 +61,7 @@ public class SuppliersRestController {
         ResponseDetails details;
         Long supplierId = supplier.getId();
 
-        if (supplier != null) {
+        if (supplier!=null) {
 
             if (supplierId == null) {
                 LOGGER.info("Save new supplier {}", supplier.getName());

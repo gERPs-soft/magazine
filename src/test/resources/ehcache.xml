@@ -1,0 +1,52 @@
+<ehcache xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="ehcache.xsd"
+         updateCheck="true"
+         monitoring="autodetect"
+         dynamicConfig="true">
+
+    <diskStore path="java.io.tmpdir" />
+
+    <defaultCache
+            maxElementsInMemory="100"
+            eternal="false"
+            timeToIdleSeconds="120"
+            timeToLiveSeconds="120"
+            overflowToDisk="true"
+            diskSpoolBufferSizeMB="30"
+            maxElementsOnDisk="10000000"
+            diskPersistent="false"
+            diskExpiryThreadIntervalSeconds="120"
+            memoryStoreEvictionPolicy="LRU"/>
+
+    <cache name="ProdCache"
+           maxEntriesLocalHeap="10000"
+           maxEntriesLocalDisk="1000"
+           eternal="false"
+           diskSpoolBufferSizeMB="20"
+           timeToLiveSeconds="60"
+           memoryStoreEvictionPolicy="LFU"
+           transactionalMode="off">
+        <persistence strategy="localTempSwap" />
+    </cache>
+    <cache name="GroupsCache"
+           maxEntriesLocalHeap="10000"
+           maxEntriesLocalDisk="1000"
+           eternal="false"
+           diskSpoolBufferSizeMB="20"
+           timeToLiveSeconds="300"
+           memoryStoreEvictionPolicy="LFU"
+           transactionalMode="off">
+        <persistence strategy="localTempSwap" />
+    </cache>
+    <cache name="SuppliersCache"
+           maxEntriesLocalHeap="10000"
+           maxEntriesLocalDisk="1000"
+           eternal="false"
+           diskSpoolBufferSizeMB="20"
+           timeToLiveSeconds="120"
+           memoryStoreEvictionPolicy="LFU"
+           transactionalMode="off">
+        <persistence strategy="localTempSwap" />
+    </cache>
+
+</ehcache>
